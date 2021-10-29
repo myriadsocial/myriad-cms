@@ -1,10 +1,12 @@
 import * as Redux from 'redux'
+import {ReportType} from '../../../enums'
 import {ReporterWithPaginationData} from '../../../interfaces'
 import {Actions} from './action'
 import * as constants from './constants'
 
 export interface ReporterState {
   reporters: ReporterWithPaginationData
+  referenceType: ReportType
   loading: boolean
 }
 
@@ -19,6 +21,7 @@ const initialData = {
 
 const initialState: ReporterState = {
   reporters: initialData,
+  referenceType: ReportType.USER,
   loading: true,
 }
 
@@ -31,6 +34,7 @@ export const ReportersReducer: Redux.Reducer<ReporterState, Actions> = (
       return {
         ...state,
         reporters: action.allReporters,
+        referenceType: action.referenceType,
         loading: false,
       }
     }
