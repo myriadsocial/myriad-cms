@@ -56,7 +56,7 @@ export const fetchAllReported = (
       type: constants.LOADING,
     })
 
-    let newOrder = ['']
+    let newOrder = undefined
     let reportType = undefined
 
     if (reportDate === 'newest') {
@@ -76,18 +76,36 @@ export const fetchAllReported = (
     }
 
     try {
-      const filter = JSON.stringify({
+      const filter = {
         where: {
-          referenceType: type,
           status: ReportStatusType.PENDING,
           type: reportType,
         },
         order: newOrder,
-      })
+      }
+
+      if (type === ReportType.COMMENT || type === ReportType.POST) {
+        filter.where = Object.assign(filter.where, {
+          or: [
+            {
+              referenceType: ReportType.POST,
+            },
+            {
+              referenceType: ReportType.COMMENT,
+            },
+          ],
+        })
+      } else {
+        filter.where = Object.assign(filter.where, {
+          referenceType: ReportType.USER,
+        })
+      }
 
       //TODO: Moved to env
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/reports?pageNumber=${pageNumber}&filter=${filter}`
+        `${process.env.REACT_APP_API_URL}/reports?pageNumber=${pageNumber}&filter=${JSON.stringify(
+          filter
+        )}`
       )
       const data = await response.json()
 
@@ -135,7 +153,7 @@ export const updateAllReported = (reportId: string, type: ReportType) => {
     try {
       let payload = null
 
-      if (type === ReportType.POST) {
+      if (type === ReportType.POST || type === ReportType.COMMENT) {
         payload = {
           type: constants.UPDATE_ALL_REPORTED_POST,
           reportId: reportId,
