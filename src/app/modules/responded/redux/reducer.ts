@@ -71,7 +71,7 @@ export const RespondedReducer: Redux.Reducer<RespondedState, Actions> = (
     case constants.UPDATE_ALL_RESPONDED_USER: {
       return {
         ...state,
-        reportedUser: {
+        respondedUser: {
           ...state.respondedUser,
           data: state.respondedUser.data.filter((report) => report.id !== action.reportId),
           meta: state.respondedUser.meta,
