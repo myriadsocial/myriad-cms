@@ -58,7 +58,7 @@ export const fetchAllResponded = (
       type: constants.LOADING,
     })
 
-    let newOrder = ['']
+    let newOrder = undefined
     let penaltyStatus = undefined
     let reportStatus = undefined
 
@@ -128,9 +128,8 @@ export const fetchAllResponded = (
     }
 
     try {
-      const filter = JSON.stringify({
+      const filter = {
         where: {
-          referenceType: type,
           or: [
             {status: ReportStatusType.IGNORED},
             {status: ReportStatusType.REMOVED},
@@ -140,11 +139,44 @@ export const fetchAllResponded = (
           status: reportStatus,
         },
         order: newOrder,
-      })
+      }
+
+      if (type === ReportType.COMMENT || type === ReportType.POST) {
+        filter.where = Object.assign(filter.where, {
+          or: [
+            {
+              referenceType: ReportType.POST,
+              status: {
+                inq: [
+                  ReportStatusType.APPROVED,
+                  ReportStatusType.IGNORED,
+                  ReportStatusType.REMOVED,
+                ],
+              },
+            },
+            {
+              referenceType: ReportType.COMMENT,
+              status: {
+                inq: [
+                  ReportStatusType.APPROVED,
+                  ReportStatusType.IGNORED,
+                  ReportStatusType.REMOVED,
+                ],
+              },
+            },
+          ],
+        })
+      } else {
+        filter.where = Object.assign(filter.where, {
+          referenceType: ReportType.USER,
+        })
+      }
 
       //TODO: Moved to env
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/reports?pageNumber=${pageNumber}&filter=${filter}`
+        `${process.env.REACT_APP_API_URL}/reports?pageNumber=${pageNumber}&filter=${JSON.stringify(
+          filter
+        )}`
       )
       const data = await response.json()
 
