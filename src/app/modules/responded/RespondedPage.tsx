@@ -43,7 +43,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   return (
     <>
       {loading ? (
-        <LoadingContent tableHeader={tableHeader} />
+        <LoadingContent tableHeader={tableHeader} tableType={TableType.RESPONDED} type={type} />
       ) : (
         <RespondedTable
           tableType={TableType.RESPONDED}
