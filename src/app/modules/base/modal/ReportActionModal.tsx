@@ -32,13 +32,16 @@ const ReportActionModal: React.FC<Props> = ({
   tableType,
   referenceId,
 }) => {
-  const {reporters, loading} = useSelector<RootState, ReporterState>((state) => state.reporters)
+  const {reporters, referenceType, loading} = useSelector<RootState, ReporterState>(
+    (state) => state.reporters
+  )
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
 
   const defaultProfilePictureURL =
     listProfileImage[Math.floor(Math.random() * listProfileImage.length)]
   const openConfirmation = () => setShowModal(true)
+
   const ignoreReport = async () => {
     dispatch(updateAllReported(reportId, type))
     return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}`, {
@@ -64,7 +67,10 @@ const ReportActionModal: React.FC<Props> = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        status: type === ReportType.POST ? ReportStatusType.REMOVED : ReportStatusType.APPROVED,
+        status:
+          type === ReportType.POST || type === ReportType.COMMENT
+            ? ReportStatusType.REMOVED
+            : ReportStatusType.APPROVED,
         updatedAt: new Date(),
       }),
     })
@@ -81,17 +87,30 @@ const ReportActionModal: React.FC<Props> = ({
 
   const onHide = () => setShowModal(false)
   const onRemoved = tableType === TableType.REPORTED ? removedReport : activate
-  const actionButton =
-    tableType === TableType.REPORTED
-      ? type === ReportType.POST
-        ? 'Remove'
-        : 'Ban User'
-      : type === ReportType.POST
-      ? 'Restore'
-      : 'Activate'
 
-  const modalTitle1 = tableType === TableType.REPORTED ? 'Reported' : 'Removed'
-  const modalTitle2 = type === ReportType.POST ? 'post' : 'user'
+  let actionButton = null
+
+  if (tableType === TableType.REPORTED) {
+    if (type === ReportType.POST) {
+      actionButton = 'Remove'
+    } else if (type === ReportType.COMMENT) {
+      actionButton = 'Remove'
+    } else {
+      actionButton = 'Ban User'
+    }
+  } else {
+    if (type === ReportType.POST) {
+      actionButton = 'Restore'
+    } else if (type === ReportType.COMMENT) {
+      actionButton = 'Restore'
+    } else {
+      actionButton = 'Activate'
+    }
+  }
+
+  let modalTitle1 = tableType === TableType.REPORTED ? 'Reported' : 'Removed'
+
+  const urlType = type === ReportType.POST || type === ReportType.COMMENT ? 'posts' : 'users'
 
   return (
     <>
@@ -107,7 +126,7 @@ const ReportActionModal: React.FC<Props> = ({
             <div className='modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15'>
               <div className='text-left mb-5'>
                 <h4 className='mb-1'>
-                  {modalTitle1} {modalTitle2} action
+                  {modalTitle1} {referenceType} action
                 </h4>
 
                 <span className='text-muted fs-7'>{totalReporters} users</span>
@@ -116,8 +135,8 @@ const ReportActionModal: React.FC<Props> = ({
               <div className='text-left mb-5'>
                 <span className='text-muted fs-7'>Post URL</span>
                 <p className='mt-2'>
-                  <a href={`https://api.dev.myriad.systems/post/${referenceId}`}>
-                    https://app.dev.myriad.systems/post/{referenceId}
+                  <a href={`${process.env.REACT_APP_API_URL}/${urlType}/${referenceId}`}>
+                    https://app.dev.myriad.systems/{urlType}/{referenceId}
                   </a>
                 </p>
               </div>
@@ -150,9 +169,13 @@ const ReportActionModal: React.FC<Props> = ({
                             >
                               {user.reporter.name}
                             </a>
-                            <span className='text-muted text-muted d-block fs-7'>
-                              {user.description}
-                            </span>
+                            {tableType === 'responded' && type === ReportType.USER ? (
+                              <></>
+                            ) : (
+                              <span className='text-muted text-muted d-block fs-7'>
+                                {user.description}
+                              </span>
+                            )}
                           </div>
                         </div>
                       )
@@ -162,13 +185,19 @@ const ReportActionModal: React.FC<Props> = ({
               </div>
 
               <div className='d-flex flex-stack'>
-                <button
-                  className='btn btn-sm btn-warning'
-                  onClick={ignoreReport}
-                  data-bs-dismiss='modal'
-                >
-                  Ignore
-                </button>
+                {tableType === 'reported' ? (
+                  <button
+                    className='btn btn-sm btn-warning'
+                    onClick={ignoreReport}
+                    data-bs-dismiss='modal'
+                  >
+                    Ignore
+                  </button>
+                ) : (
+                  <button className='btn btn-sm btn-warning' data-bs-dismiss='modal'>
+                    Cancel
+                  </button>
+                )}
                 <button className='btn btn-sm btn-info' onClick={openConfirmation}>
                   {actionButton}
                 </button>
@@ -182,7 +211,7 @@ const ReportActionModal: React.FC<Props> = ({
         onHide={onHide}
         onRemoved={onRemoved}
         tableType={tableType}
-        type={type}
+        type={referenceType}
       />
     </>
   )
