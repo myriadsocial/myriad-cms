@@ -27,6 +27,14 @@ export interface Report {
       profilePictureURL: string
     }
   }
+  reportedComment: {
+    text: string
+    postId: string
+    user: {
+      name: string
+      profilePictureURL: string
+    }
+  }
   reporters: Reporter[]
 }
 

@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {ReportType, TableType} from '../../../enums'
 import {TableHeader} from '../../../interfaces'
 import {ReportWithPaginationData} from '../../../interfaces/report.interface'
 import {TableContent} from './components/TableContent'
-import {Form, InputGroup} from 'react-bootstrap-v5'
-import {useSelector} from 'react-redux'
+import {Form, InputGroup, FormControl} from 'react-bootstrap-v5'
+import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../../../setup'
 import {ReportedState} from '../../reported/redux/reducer'
 import {RespondedState} from '../../responded/redux/reducer'
@@ -36,7 +36,8 @@ const TablePage: React.FC<Props> = (props) => {
     changedPenalty,
   } = props
 
-  const {title, subTitle, field1, field2, field3, field4, field5} = tableHeader
+  const [query, setQuery] = useState('')
+  const {title, field1, field2, field3, field4, field5} = tableHeader
   const {reportedPost, reportedUser} = useSelector<RootState, ReportedState>(
     (state) => state.reported
   )
@@ -69,6 +70,14 @@ const TablePage: React.FC<Props> = (props) => {
       : respondedReportDateUser
 
   const respondDate = type === ReportType.POST ? respondDatePost : respondDateUser
+  const totalReport =
+    tableType === TableType.REPORTED
+      ? type === ReportType.POST
+        ? reportedPost.meta.totalItemCount
+        : reportedPost.meta.totalItemCount
+      : type === ReportType.POST
+      ? respondedPost.meta.totalItemCount
+      : respondedPost.meta.totalItemCount
 
   const onChangedOrder = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value
@@ -95,14 +104,32 @@ const TablePage: React.FC<Props> = (props) => {
     if (changedPenalty) changedPenalty(value)
   }
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    setQuery(event.target.value)
+  }
+
   return (
     <>
       <div className={`card ${className}`} style={{overflowY: 'scroll', height: '75%'}}>
-        <div className='card-header border-0 pt-5'>
-          <h3 className='card-title align-items-start flex-column'>
+        <div className='card-header border-0 pt-5 row'>
+          <h3 className='card-title align-items-start flex-column col'>
             <span className='card-label fw-bolder fs-3 mb-1'>{title}</span>
-            <span className='text-muted mt-1 fw-bold fs-7'>{subTitle} reports</span>
+            <span className='text-muted mt-1 fw-bold fs-7'>{totalReport} reports</span>
           </h3>
+          <div className='col'></div>
+          <div className='col'></div>
+          <InputGroup className='mb-3 col'>
+            <FormControl
+              placeholder='Search'
+              aria-label='Search'
+              aria-describedby='basic-addon2'
+              onChange={handleSearch}
+            />
+            <InputGroup.Text style={{cursor: 'pointer'}}>
+              <i className='fas fa-search'></i>
+            </InputGroup.Text>
+          </InputGroup>
         </div>
         <div className='card-body py-3'>
           <div className='mb-3 d-inline-flex'>

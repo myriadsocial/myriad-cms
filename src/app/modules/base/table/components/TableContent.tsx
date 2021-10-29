@@ -25,22 +25,8 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
     listProfileImage[Math.floor(Math.random() * listProfileImage.length)]
   const dispatch = useDispatch()
 
-  // Reported Detail Profile
-  const profileImage =
-    type === ReportType.POST
-      ? data.reportedPost.user.profilePictureURL ?? defaultProfilePictureURL
-      : data.reportedUser.profilePictureURL ?? defaultProfilePictureURL
-
-  const reportedName =
-    type === ReportType.POST ? data.reportedPost.user.name : data.reportedUser.name
-  const reportedDetail =
-    type === ReportType.POST
-      ? data.reportedPost?.text
-      : 'Join date ' +
-        new Date(data.reportedUser ? data.reportedUser.createdAt : '').toLocaleDateString('en-GB')
-
   const getReporters = () => {
-    dispatch(fetchAllReporters(data.id))
+    dispatch(fetchAllReporters(data.id, data.referenceType))
   }
 
   const reportedPostData = () => {
@@ -92,12 +78,40 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
     )
   }
 
+  // Reported Detail Profile
+  let profileImage = null
+  let reportedName = null
+  let reportedDetail = null
+  // let tableData = null;
+
+  if (!data.reportedPost) {
+    if (type === ReportType.USER) {
+      profileImage = data.reportedUser.profilePictureURL ?? defaultProfilePictureURL
+      reportedName = data.reportedUser.name
+      reportedDetail =
+        'Join date ' +
+        new Date(data.reportedUser ? data.reportedUser.createdAt : '').toLocaleDateString('en-GB')
+    } else {
+      profileImage = data.reportedComment.user.profilePictureURL ?? defaultProfilePictureURL
+      reportedName = data.reportedComment.user.name
+      reportedDetail = data.reportedComment.text
+    }
+  } else {
+    profileImage = data.reportedPost.user.profilePictureURL ?? defaultProfilePictureURL
+    reportedName = data.reportedPost.user.name
+    reportedDetail = data.reportedPost.text
+  }
+
+  // const referenceId = !data.reportedPost ?
+
   const tableData =
     tableType === TableType.REPORTED
       ? type === ReportType.POST
         ? reportedPostData()
         : reportedUserData()
       : respondedData()
+
+  const referenceId = data.reportedComment ? data.reportedComment.postId : data.referenceId
 
   return (
     <>
@@ -121,7 +135,13 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           <span className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>
             {new Date(data.createdAt).toLocaleDateString('en-GB')}
           </span>
-          {type === ReportType.POST && (
+          {!data.reportedPost ? (
+            type === ReportType.USER ? (
+              <></>
+            ) : (
+              <span className='text-muted fw-bold text-muted d-block fs-7'>comment</span>
+            )
+          ) : (
             <span className='text-muted fw-bold text-muted d-block fs-7'>
               {data.reportedPost?.platform}
             </span>
@@ -129,7 +149,6 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
         </td>
         {tableData}
         <td>
-          {/* <button type="button" className="btn btn-info btn-sm" onClick={getReporters}>Respond</button> */}
           <button
             className='btn btn-sm btn-light-primary'
             data-bs-toggle='modal'
@@ -141,8 +160,8 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           <ReportActionModal
             totalReporters={data.totalReported}
             reportId={data.id}
-            type={type}
-            referenceId={data.referenceId}
+            type={data.referenceType}
+            referenceId={referenceId}
             tableType={tableType}
           />
         </td>
