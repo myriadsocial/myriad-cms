@@ -14,7 +14,6 @@ type Props = {
   type: ReportType
   totalReporters: number
   tableType: TableType
-  referenceId: string
 }
 
 const listProfileImage = [
@@ -25,14 +24,8 @@ const listProfileImage = [
   '/media/svg/avatars/014-girl-7.svg',
 ]
 
-const ReportActionModal: React.FC<Props> = ({
-  totalReporters,
-  reportId,
-  type,
-  tableType,
-  referenceId,
-}) => {
-  const {reporters, referenceType, loading} = useSelector<RootState, ReporterState>(
+const ReportActionModal: React.FC<Props> = ({totalReporters, reportId, type, tableType}) => {
+  const {reporters, referenceType, referenceId, loading} = useSelector<RootState, ReporterState>(
     (state) => state.reporters
   )
   const [showModal, setShowModal] = useState(false)
@@ -110,7 +103,18 @@ const ReportActionModal: React.FC<Props> = ({
 
   let modalTitle1 = tableType === TableType.REPORTED ? 'Reported' : 'Removed'
 
-  const urlType = type === ReportType.POST || type === ReportType.COMMENT ? 'posts' : 'users'
+  const filter = {
+    include: [
+      {
+        relation: 'comments',
+        scope: {
+          where: {
+            id: referenceId,
+          },
+        },
+      },
+    ],
+  }
 
   return (
     <>
@@ -135,8 +139,16 @@ const ReportActionModal: React.FC<Props> = ({
               <div className='text-left mb-5'>
                 <span className='text-muted fs-7'>Post URL</span>
                 <p className='mt-2'>
-                  <a href={`${process.env.REACT_APP_API_URL}/${urlType}/${referenceId}`}>
-                    https://app.dev.myriad.systems/{urlType}/{referenceId}
+                  <a
+                    href={
+                      referenceType === ReportType.COMMENT
+                        ? `${process.env.REACT_APP_API_URL}/${
+                            referenceType + 's'
+                          }/${referenceId}/posts?filter=${JSON.stringify(filter)}`
+                        : `${process.env.REACT_APP_API_URL}/${referenceType + 's'}/${referenceId}`
+                    }
+                  >
+                    https://app.dev.myriad.systems/{referenceType}/{referenceId}
                   </a>
                 </p>
               </div>

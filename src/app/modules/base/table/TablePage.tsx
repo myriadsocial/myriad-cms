@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {ReportType, TableType} from '../../../enums'
 import {TableHeader} from '../../../interfaces'
 import {ReportWithPaginationData} from '../../../interfaces/report.interface'
 import {TableContent} from './components/TableContent'
 import {Form, InputGroup, FormControl} from 'react-bootstrap-v5'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {RootState} from '../../../../setup'
 import {ReportedState} from '../../reported/redux/reducer'
 import {RespondedState} from '../../responded/redux/reducer'
@@ -36,7 +36,6 @@ const TablePage: React.FC<Props> = (props) => {
     changedPenalty,
   } = props
 
-  const [query, setQuery] = useState('')
   const {title, field1, field2, field3, field4, field5} = tableHeader
   const {reportedPost, reportedUser} = useSelector<RootState, ReportedState>(
     (state) => state.reported
@@ -104,11 +103,6 @@ const TablePage: React.FC<Props> = (props) => {
     if (changedPenalty) changedPenalty(value)
   }
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    setQuery(event.target.value)
-  }
-
   return (
     <>
       <div className={`card ${className}`} style={{overflowY: 'scroll', height: '75%'}}>
@@ -120,12 +114,7 @@ const TablePage: React.FC<Props> = (props) => {
           <div className='col'></div>
           <div className='col'></div>
           <InputGroup className='mb-3 col'>
-            <FormControl
-              placeholder='Search'
-              aria-label='Search'
-              aria-describedby='basic-addon2'
-              onChange={handleSearch}
-            />
+            <FormControl placeholder='Search' aria-label='Search' aria-describedby='basic-addon2' />
             <InputGroup.Text style={{cursor: 'pointer'}}>
               <i className='fas fa-search'></i>
             </InputGroup.Text>

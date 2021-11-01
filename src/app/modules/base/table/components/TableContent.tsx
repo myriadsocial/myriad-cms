@@ -26,7 +26,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   const dispatch = useDispatch()
 
   const getReporters = () => {
-    dispatch(fetchAllReporters(data.id, data.referenceType))
+    dispatch(fetchAllReporters(data.id, data.referenceType, data.referenceId))
   }
 
   const reportedPostData = () => {
@@ -111,8 +111,6 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
         : reportedUserData()
       : respondedData()
 
-  const referenceId = data.reportedComment ? data.reportedComment.postId : data.referenceId
-
   return (
     <>
       <tr>
@@ -161,7 +159,6 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
             totalReporters={data.totalReported}
             reportId={data.id}
             type={data.referenceType}
-            referenceId={referenceId}
             tableType={tableType}
           />
         </td>
