@@ -18,8 +18,7 @@ const Toolbar1: React.FC = () => {
 
         {/* begin::Actions */}
         <div className='d-flex align-items-center py-1'>
-          <div className='card-toolbar'>
-          </div>
+          <div className='card-toolbar'></div>
         </div>
         {/* end::Actions */}
       </div>
