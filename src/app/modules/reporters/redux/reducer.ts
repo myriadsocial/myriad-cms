@@ -7,6 +7,7 @@ import * as constants from './constants'
 export interface ReporterState {
   reporters: ReporterWithPaginationData
   referenceType: ReportType
+  referenceId: string
   loading: boolean
 }
 
@@ -22,6 +23,7 @@ const initialData = {
 const initialState: ReporterState = {
   reporters: initialData,
   referenceType: ReportType.USER,
+  referenceId: '',
   loading: true,
 }
 
@@ -35,6 +37,7 @@ export const ReportersReducer: Redux.Reducer<ReporterState, Actions> = (
         ...state,
         reporters: action.allReporters,
         referenceType: action.referenceType,
+        referenceId: action.referenceId,
         loading: false,
       }
     }

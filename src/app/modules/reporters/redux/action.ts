@@ -6,6 +6,7 @@ export interface LoadReporters {
   type: constants.FETCH_REPORTERS_TYPE
   allReporters: ReporterWithPaginationData
   referenceType: ReportType
+  referenceId: string
   loading: boolean
 }
 
@@ -16,7 +17,7 @@ export interface SetLoading {
 
 export type Actions = LoadReporters | SetLoading
 
-export const fetchAllReporters = (reportId: string, type?: ReportType) => {
+export const fetchAllReporters = (reportId: string, type?: ReportType, referenceId?: string) => {
   return async (dispatch: any) => {
     try {
       dispatch({
@@ -30,6 +31,7 @@ export const fetchAllReporters = (reportId: string, type?: ReportType) => {
         type: constants.FETCH_REPORTERS,
         allReporters: data,
         referenceType: type,
+        referenceId: referenceId,
       })
     } catch (err) {
       console.log(err)
