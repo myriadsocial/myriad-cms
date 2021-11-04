@@ -8,6 +8,7 @@ export interface ReporterState {
   reporters: ReporterWithPaginationData
   referenceType: ReportType
   referenceId: string
+  reportId: string
   loading: boolean
 }
 
@@ -24,6 +25,7 @@ const initialState: ReporterState = {
   reporters: initialData,
   referenceType: ReportType.USER,
   referenceId: '',
+  reportId: '',
   loading: true,
 }
 
@@ -38,6 +40,7 @@ export const ReportersReducer: Redux.Reducer<ReporterState, Actions> = (
         reporters: action.allReporters,
         referenceType: action.referenceType,
         referenceId: action.referenceId,
+        reportId: action.reportId,
         loading: false,
       }
     }

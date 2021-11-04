@@ -7,6 +7,7 @@ export interface LoadReporters {
   allReporters: ReporterWithPaginationData
   referenceType: ReportType
   referenceId: string
+  reportId: string
   loading: boolean
 }
 
@@ -32,6 +33,7 @@ export const fetchAllReporters = (reportId: string, type?: ReportType, reference
         allReporters: data,
         referenceType: type,
         referenceId: referenceId,
+        reportId: reportId,
       })
     } catch (err) {
       console.log(err)

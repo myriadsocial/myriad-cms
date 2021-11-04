@@ -24,10 +24,11 @@ const listProfileImage = [
   '/media/svg/avatars/014-girl-7.svg',
 ]
 
-const ReportActionModal: React.FC<Props> = ({totalReporters, reportId, type, tableType}) => {
-  const {reporters, referenceType, referenceId, loading} = useSelector<RootState, ReporterState>(
-    (state) => state.reporters
-  )
+const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) => {
+  const {reportId, reporters, referenceType, referenceId, loading} = useSelector<
+    RootState,
+    ReporterState
+  >((state) => state.reporters)
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
 
