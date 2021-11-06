@@ -88,7 +88,9 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   if (type === ReportType.USER) {
     reportedDetail =
       'Join date ' +
-      new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString('en-GB')
+      new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString(
+        'en-GB'
+      )
   }
 
   const tableData =
@@ -130,16 +132,13 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           </span>
           {data.referenceType === ReportType.USER ? (
             <></>
+          ) : data.referenceType === ReportType.POST ? (
+            <span className='text-muted fw-bold text-muted d-block fs-7'>
+              {data.reportedDetail?.platform}
+            </span>
           ) : (
-            data.referenceType === ReportType.POST ? (
-              <span className='text-muted fw-bold text-muted d-block fs-7'>
-                {data.reportedDetail?.platform}
-              </span>
-            ) : (
-              <span className='text-muted fw-bold text-muted d-block fs-7'>comment</span>
-            )
+            <span className='text-muted fw-bold text-muted d-block fs-7'>comment</span>
           )}
-
         </td>
         {tableData}
         <td>
