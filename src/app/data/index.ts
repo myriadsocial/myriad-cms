@@ -1,2 +1,5 @@
 export * from './reported-table-header.data'
 export * from './responded-table-header.data'
+export * from './post-report-list.data'
+export * from './default-profile-picture.data'
+export * from './post-status-list.data'
