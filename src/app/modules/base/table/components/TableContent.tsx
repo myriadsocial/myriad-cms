@@ -80,27 +80,15 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   }
 
   // Reported Detail Profile
-  let profileImage = null
-  let reportedName = null
-  let reportedDetail = null
+  let profileImage = data.reportedDetail.user.profilePictureURL ?? defaultProfilePictureURL
+  let reportedName = data.reportedDetail.user.name
+  let reportedDetail = data.reportedDetail.text
   // let tableData = null;
 
-  if (!data.reportedPost) {
-    if (type === ReportType.USER) {
-      profileImage = data.reportedUser.profilePictureURL ?? defaultProfilePictureURL
-      reportedName = data.reportedUser.name
-      reportedDetail =
-        'Join date ' +
-        new Date(data.reportedUser ? data.reportedUser.createdAt : '').toLocaleDateString('en-GB')
-    } else {
-      profileImage = data.reportedComment.user.profilePictureURL ?? defaultProfilePictureURL
-      reportedName = data.reportedComment.user.name
-      reportedDetail = data.reportedComment.text
-    }
-  } else {
-    profileImage = data.reportedPost.user.profilePictureURL ?? defaultProfilePictureURL
-    reportedName = data.reportedPost.user.name
-    reportedDetail = data.reportedPost.text
+  if (type === ReportType.USER) {
+    reportedDetail =
+      'Join date ' +
+      new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString('en-GB')
   }
 
   const tableData =
@@ -140,17 +128,18 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           <span className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>
             {new Date(data.createdAt).toLocaleDateString('en-GB')}
           </span>
-          {!data.reportedPost ? (
-            type === ReportType.USER ? (
-              <></>
+          {data.referenceType === ReportType.USER ? (
+            <></>
+          ) : (
+            data.referenceType === ReportType.POST ? (
+              <span className='text-muted fw-bold text-muted d-block fs-7'>
+                {data.reportedDetail?.platform}
+              </span>
             ) : (
               <span className='text-muted fw-bold text-muted d-block fs-7'>comment</span>
             )
-          ) : (
-            <span className='text-muted fw-bold text-muted d-block fs-7'>
-              {data.reportedPost?.platform}
-            </span>
           )}
+
         </td>
         {tableData}
         <td>
