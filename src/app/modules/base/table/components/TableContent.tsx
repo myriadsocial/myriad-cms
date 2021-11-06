@@ -5,6 +5,7 @@ import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {useDispatch} from 'react-redux'
 import {fetchAllReporters} from '../../../reporters/redux/action'
 import {ReportActionModal} from '../../modal/ReportActionModal'
+import {usePostReportList, useDefaultProfileImageUrl, usePostStatusList} from '../../../../data/'
 
 type Props = {
   tableType: TableType
@@ -12,18 +13,18 @@ type Props = {
   data: Report
 }
 
-const listProfileImage = [
-  '/media/svg/avatars/001-boy.svg',
-  '/media/svg/avatars/047-girl-25.svg',
-  '/media/svg/avatars/006-girl-3.svg',
-  '/media/svg/avatars/020-girl-11.svg',
-  '/media/svg/avatars/014-girl-7.svg',
-]
-
 const TableContent: React.FC<Props> = ({tableType, data, type}) => {
-  const defaultProfilePictureURL =
-    listProfileImage[Math.floor(Math.random() * listProfileImage.length)]
+  const defaultProfilePictureURL = useDefaultProfileImageUrl()
   const dispatch = useDispatch()
+
+  const postReportList = usePostReportList()
+  const postReport = postReportList.find((post) => post.id === data.type)
+  const title = postReport?.title
+  const color = postReport?.color
+
+  const postStatusList = usePostStatusList()
+  const postStatus = postStatusList.find((post) => post.id === data.status)
+  const statusColor = postStatus?.color
 
   const getReporters = () => {
     dispatch(fetchAllReporters(data.id, data.referenceType, data.referenceId))
@@ -33,7 +34,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
     return (
       <>
         <td>
-          <span className='badge badge-light-success'>{data.type}</span>
+          <span className={`badge badge-light-${color}`}>{title}</span>
         </td>
         <td className='text-dark fw-bolder text-hover-primary fs-6'>{data.totalReported} users</td>
       </>
@@ -72,7 +73,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           <span className='text-muted fw-bold text-muted d-block fs-7'>admin 1</span>
         </td>
         <td>
-          <span className='badge badge-light-success'>{status}</span>
+          <span className={`badge badge-light-${statusColor}`}>{status}</span>
         </td>
       </>
     )
@@ -102,14 +103,20 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
     reportedDetail = data.reportedPost.text
   }
 
-  // const referenceId = !data.reportedPost ?
-
   const tableData =
     tableType === TableType.REPORTED
       ? type === ReportType.POST
         ? reportedPostData()
         : reportedUserData()
       : respondedData()
+
+  const disabledModal = () => {
+    if (tableType === TableType.RESPONDED && data.status === ReportStatusType.IGNORED) {
+      return true
+    }
+
+    return false
+  }
 
   return (
     <>
@@ -152,6 +159,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
             data-bs-toggle='modal'
             data-bs-target='#kt_modal_report_action'
             onClick={getReporters}
+            disabled={disabledModal()}
           >
             Respond
           </button>
