@@ -8,6 +8,7 @@ import {updateAllReported} from '../../reported/redux/action'
 import {updateAllResponded} from '../../responded/redux/action'
 import {RootState} from '../../../../setup'
 import {ReporterState} from '../../reporters/redux/reducer'
+import {useDefaultProfileImageUrl} from '../../../data'
 
 type Props = {
   reportId: string
@@ -15,14 +16,6 @@ type Props = {
   totalReporters: number
   tableType: TableType
 }
-
-const listProfileImage = [
-  '/media/svg/avatars/001-boy.svg',
-  '/media/svg/avatars/047-girl-25.svg',
-  '/media/svg/avatars/006-girl-3.svg',
-  '/media/svg/avatars/020-girl-11.svg',
-  '/media/svg/avatars/014-girl-7.svg',
-]
 
 const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) => {
   const {reportId, reporters, referenceType, referenceId, loading} = useSelector<
@@ -32,8 +25,7 @@ const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) =
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
 
-  const defaultProfilePictureURL =
-    listProfileImage[Math.floor(Math.random() * listProfileImage.length)]
+  const defaultProfilePictureURL = useDefaultProfileImageUrl()
   const openConfirmation = () => setShowModal(true)
 
   const ignoreReport = async () => {
@@ -117,6 +109,8 @@ const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) =
     ],
   }
 
+  console.log(reporters)
+
   return (
     <>
       <div className='modal fade' id='kt_modal_report_action' aria-hidden='true'>
@@ -138,7 +132,9 @@ const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) =
               </div>
 
               <div className='text-left mb-5'>
-                <span className='text-muted fs-7'>Post URL</span>
+                <span className='text-muted fs-7'>
+                  {referenceType[0].toUpperCase() + referenceType.substring(1)} URL
+                </span>
                 <p className='mt-2'>
                   <a
                     href={
@@ -146,10 +142,10 @@ const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) =
                         ? `${process.env.REACT_APP_API_URL}/${
                             referenceType + 's'
                           }/${referenceId}/posts?filter=${JSON.stringify(filter)}`
-                        : `${process.env.REACT_APP_API_URL}/${referenceType + 's'}/${referenceId}`
+                        : `${process.env.REACT_APP_WEB_URL}/${referenceType}/${referenceId}`
                     }
                   >
-                    https://app.dev.myriad.systems/{referenceType}/{referenceId}
+                    {process.env.REACT_APP_WEB_URL}/{referenceType}/{referenceId}
                   </a>
                 </p>
               </div>
