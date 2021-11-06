@@ -10,29 +10,19 @@ export interface Report {
   status: ReportStatusType
   penaltyStatus: PenaltyStatusType
   totalReported: number
-  postId: string
-  userId: string
   createdAt: string
   updatedAt: string
-  reportedUser: {
-    name: string
-    profilePictureURL: string
-    createdAt: string
-  }
-  reportedPost: {
-    text: string
-    platform: string
+  reportedDetail: {
+    title?: string
+    text?: string
+    platform?: string
+    postId?: string
     user: {
+      id: string
       name: string
+      username: string
       profilePictureURL: string
-    }
-  }
-  reportedComment: {
-    text: string
-    postId: string
-    user: {
-      name: string
-      profilePictureURL: string
+      createdAt: string
     }
   }
   reporters: Reporter[]
