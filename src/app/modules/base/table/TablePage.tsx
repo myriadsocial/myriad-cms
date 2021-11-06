@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux'
 import {RootState} from '../../../../setup'
 import {ReportedState} from '../../reported/redux/reducer'
 import {RespondedState} from '../../responded/redux/reducer'
+import {usePostReportList} from '../../../data/post-report-list.data'
 
 type Props = {
   className: string
@@ -78,6 +79,8 @@ const TablePage: React.FC<Props> = (props) => {
       ? respondedPost.meta.totalItemCount
       : respondedPost.meta.totalItemCount
 
+  const postCategories = usePostReportList()
+
   const onChangedOrder = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value
     changedReportDate(value)
@@ -142,13 +145,11 @@ const TablePage: React.FC<Props> = (props) => {
                 <Form.Select value={category} onChange={onChangedCategory}>
                   <option disabled>Filter category</option>
                   <option value='all'>All Category</option>
-                  <option value='Trademark'>Trademark</option>
-                  <option value='Copyright material'>Copyright material</option>
-                  <option value='Child exploit'>Child exploit</option>
-                  <option value='Pornography'>Pornography</option>
-                  <option value='Private Information'>Private Information</option>
-                  <option value='Abusive and violent'>Abusive and violent</option>
-                  <option value='Spam and system abuse'>Spam and system abuse</option>
+                  {postCategories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.title}
+                    </option>
+                  ))}
                 </Form.Select>
               </InputGroup>
             ) : (
