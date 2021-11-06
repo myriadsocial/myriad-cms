@@ -109,8 +109,6 @@ const ReportActionModal: React.FC<Props> = ({totalReporters, type, tableType}) =
     ],
   }
 
-  console.log(reporters)
-
   return (
     <>
       <div className='modal fade' id='kt_modal_report_action' aria-hidden='true'>
