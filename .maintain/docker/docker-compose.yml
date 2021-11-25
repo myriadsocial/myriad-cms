@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  web:
+    container_name: myriad-cms
+    image: myriadsocial/myriad-cms
+    build:
+      context: ../../
+      dockerfile: .maintain/docker/Dockerfile
+    env_file:
+      - ../../.env
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    ports:
+      - 3003:3000
+    networks:
+      myriad:
+        ipv4_address: 172.27.1.4
+        aliases:
+          - myriad-cms
+
+networks:
+  myriad:
+    external: true
