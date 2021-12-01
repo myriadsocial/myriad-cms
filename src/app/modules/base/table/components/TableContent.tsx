@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {ReportStatusType, ReportType, TableType} from '../../../../enums'
 import {Report} from '../../../../interfaces'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
@@ -15,7 +15,12 @@ type Props = {
 
 const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   const defaultProfilePictureURL = useDefaultProfileImageUrl()
+  const [showRespond, setShowRespond] = useState<boolean>(false);
   const dispatch = useDispatch()
+
+  const onHideRespond = () => {
+    setShowRespond(false);
+  }
 
   const postReportList = usePostReportList()
   const postReport = postReportList.find((post) => post.id === data.type)
@@ -27,6 +32,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   const statusColor = postStatus?.color
 
   const getReporters = () => {
+    setShowRespond(true);
     dispatch(fetchAllReporters(data.id, data.referenceType, data.referenceId))
   }
 
@@ -145,17 +151,19 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
           <button
             className='btn btn-sm btn-light-primary'
             data-bs-toggle='modal'
-            data-bs-target='#kt_modal_report_action'
+            data-bs-target='#report_action'
             onClick={getReporters}
             disabled={disabledModal()}
           >
             Respond
           </button>
           <ReportActionModal
+            showRespond={showRespond}
             totalReporters={data.totalReported}
             reportId={data.id}
             type={data.referenceType}
             tableType={tableType}
+            onHideRespond={onHideRespond}
           />
         </td>
       </tr>

@@ -2,13 +2,13 @@ import {Suspense, lazy} from 'react'
 import {Redirect, Route, Switch} from 'react-router-dom'
 import {FallbackView} from '../../_metronic/partials'
 import {ReportType} from '../enums'
-import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
+import {DashboardWrapper} from '../pages/DashboardWrapper'
 
 export function PrivateRoutes() {
-  const ReportedPostPage = lazy(() => import('../modules/reported/ReportedPage'))
-  const ReportedUserPage = lazy(() => import('../modules/reported/ReportedPage'))
-  const RespondedPostPage = lazy(() => import('../modules/responded/RespondedPage'))
-  const RespondedUserPage = lazy(() => import('../modules/responded/RespondedPage'))
+  const ReportedPostPage = lazy(() => import('../pages/ReportedPage'))
+  const ReportedUserPage = lazy(() => import('../pages/ReportedPage'))
+  const RespondedPostPage = lazy(() => import('../pages/RespondedPage'))
+  const RespondedUserPage = lazy(() => import('../pages/RespondedPage'))
 
   return (
     <Suspense fallback={<FallbackView />}>

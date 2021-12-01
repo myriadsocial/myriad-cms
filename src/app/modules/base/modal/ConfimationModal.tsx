@@ -29,9 +29,6 @@ const ConfirmationModal: React.FC<Props> = ({showModal, onHide, onRemoved, table
         <Button
           variant='info'
           onClick={onRemoved}
-          data-bs-toggle='modal'
-          data-bs-target='#kt_modal_report_action'
-          data-bs-dismiss='modal'
         >
           Remove
         </Button>

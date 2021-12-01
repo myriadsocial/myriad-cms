@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import {ReportedTable} from './components/ReportTable'
-import {ReportType, TableType} from '../../enums'
+import {ReportedTable} from '../modules/reported/components/ReportTable'
+import {ReportType, TableType} from '../enums'
 import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../setup'
-import {ReportedState} from './redux/reducer'
-import {fetchAllReported} from './redux/action'
-import {ErrorsContent} from '../../modules/errors/ErrorsContent'
-import {LoadingContent} from '../../modules/loading/LoadingContent'
-import {reportedPostTHeader, reportedUserTHeader} from '../../data'
-import {Pagination} from '../base/bar/Paginantion'
+import {RootState} from '../../setup'
+import {ReportedState} from '../modules/reported/redux/reducer'
+import {fetchAllReported} from '../modules/reported/redux/action'
+import {ErrorsContent} from '../modules/errors/ErrorsContent'
+import {LoadingContent} from '../modules/loading/LoadingContent'
+import {reportedPostTHeader, reportedUserTHeader} from '../data'
+import {Pagination} from '../modules/base/bar/Paginantion'
 
 type Props = {
   type: ReportType

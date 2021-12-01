@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import {RespondedTable} from './components/RespondTable'
-import {ReportType, TableType} from '../../enums'
+import {RespondedTable} from '../modules/responded/components/RespondTable'
+import {ReportType, TableType} from '../enums'
 import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../../setup'
-import {RespondedState} from './redux/reducer'
-import {fetchAllResponded} from './redux/action'
-import {LoadingContent} from '../loading/LoadingContent'
-import {ErrorsContent} from '../errors/ErrorsContent'
-import {respondedPostTHeader, deletedUserTHeader} from '../../data'
-import {Pagination} from '../base/bar/Paginantion'
+import {RootState} from '../../setup'
+import {RespondedState} from '../modules/responded/redux/reducer'
+import {fetchAllResponded} from '../modules/responded/redux/action'
+import {LoadingContent} from '../modules/loading/LoadingContent'
+import {ErrorsContent} from '../modules/errors/ErrorsContent'
+import {respondedPostTHeader, deletedUserTHeader} from '../data'
+import {Pagination} from '../modules/base/bar/Paginantion'
 
 type Props = {
   type: ReportType
