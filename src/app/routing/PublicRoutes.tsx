@@ -1,5 +1,5 @@
 import {Redirect, Route, Switch} from 'react-router-dom'
-import {AuthPage} from '../modules/auth'
+import {AuthPage} from '../pages/AuthPage'
 
 export function PublicRoutes() {
   return (

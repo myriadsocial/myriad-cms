@@ -10,9 +10,10 @@ import {Redirect, Switch, Route} from 'react-router-dom'
 import {shallowEqual, useSelector} from 'react-redux'
 import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import {PrivateRoutes} from './PrivateRoutes'
-import {Logout, AuthPage} from '../modules/auth'
+import {Logout} from '../modules/auth'
 import {ErrorsPage} from '../modules/errors/ErrorsPage'
 import {RootState} from '../../setup'
+import {AuthPage} from '../pages/AuthPage'
 
 const Routes: React.FC = () => {
   const isAuthorized = useSelector<RootState>(({auth}) => auth.user, shallowEqual)

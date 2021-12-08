@@ -34,7 +34,6 @@ const TablePage: React.FC<Props> = (props) => {
     changedCategory,
     changedRespondDate,
     changedReport,
-    changedPenalty,
   } = props
 
   const {title, field1, field2, field3, field4, field5} = tableHeader
@@ -53,10 +52,10 @@ const TablePage: React.FC<Props> = (props) => {
   } = reportedUser
 
   const {
-    filter: {reportDate: respondedReportDatePost, respondDate: respondDatePost, status},
+    filter: {reportDate: respondedReportDatePost, respondDate: respondDatePost, status: postStatus},
   } = respondedPost
   const {
-    filter: {reportDate: respondedReportDateUser, respondDate: respondDateUser, penaltyStatus},
+    filter: {reportDate: respondedReportDateUser, respondDate: respondDateUser, status: userStatus},
   } = respondedUser
 
   const category = categoryPost
@@ -99,11 +98,6 @@ const TablePage: React.FC<Props> = (props) => {
   const onChangedReportStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value
     if (changedReport) changedReport(value)
-  }
-
-  const onChangedPenaltyStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value
-    if (changedPenalty) changedPenalty(value)
   }
 
   return (
@@ -171,33 +165,16 @@ const TablePage: React.FC<Props> = (props) => {
               <></>
             )}
             <span className='mx-5'></span>
-            {tableType === TableType.RESPONDED && type === ReportType.POST ? (
+            {tableType === TableType.RESPONDED ? (
               <InputGroup>
                 <InputGroup.Text>
                   <i className='fas fa-search'></i>
                 </InputGroup.Text>
-                <Form.Select value={status} onChange={onChangedReportStatus}>
+                <Form.Select value={type === ReportType.USER ? userStatus : postStatus} onChange={onChangedReportStatus}>
                   <option disabled>Post Status</option>
                   <option value='all'>All</option>
-                  <option value='removed'>Removed</option>
+                  <option value='removed'>{type === ReportType.USER ? "Banned" : "Removed"}</option>
                   <option value='ignored'>Ignored</option>
-                </Form.Select>
-              </InputGroup>
-            ) : (
-              <></>
-            )}
-            {tableType === TableType.RESPONDED && type === ReportType.USER ? (
-              <InputGroup>
-                <InputGroup.Text>
-                  <i className='fas fa-unlock-alt'></i>
-                </InputGroup.Text>
-                <Form.Select value={penaltyStatus} onChange={onChangedPenaltyStatus}>
-                  <option disabled>Penalty Status</option>
-                  <option value='all'>All</option>
-                  <option value='banned'>Banned</option>
-                  <option value='penalty 1'>Penalty 1</option>
-                  <option value='penalty 2'>Penalty 2</option>
-                  <option value='penalty 3'>Penalty 3</option>
                 </Form.Select>
               </InputGroup>
             ) : (

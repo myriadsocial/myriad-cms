@@ -9,6 +9,7 @@ import {LoadingContent} from '../modules/loading/LoadingContent'
 import {ErrorsContent} from '../modules/errors/ErrorsContent'
 import {respondedPostTHeader, deletedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
+import {PageTitle} from '../../_metronic/layout/core'
 
 type Props = {
   type: ReportType
@@ -33,7 +34,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const changedReport = (status: string) => setReportStatus(status)
 
   useEffect(() => {
-    dispatch(fetchAllResponded(pageNumber, type, reportDate, respondDate, penalty, reportStatus))
+    dispatch(fetchAllResponded(pageNumber, type, reportDate, respondDate, reportStatus))
   }, [pageNumber, type, dispatch, reportDate, respondDate, penalty, reportStatus])
 
   const data = type === ReportType.POST ? respondedPost : respondedUser
@@ -42,6 +43,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   if (error) return <ErrorsContent />
   return (
     <>
+      <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
       {loading ? (
         <LoadingContent tableHeader={tableHeader} tableType={TableType.RESPONDED} type={type} />
       ) : (

@@ -14,7 +14,7 @@ const AsideDefault: React.FC = () => {
       {/* begin::Brand */}
       <div className='aside-logo flex-column-auto' id='kt_aside_logo'>
         <Link to='/dashboard'>
-          <h1 className='text-light'>Myriad CMS</h1>
+          <h1 className='text-light'>Myriad Admin</h1>
         </Link>
       </div>
       {/* end::Brand */}

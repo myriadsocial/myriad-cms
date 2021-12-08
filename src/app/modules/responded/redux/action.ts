@@ -50,7 +50,6 @@ export const fetchAllResponded = (
   type: ReportType,
   reportDate = '',
   respondDate = '',
-  penalty = '',
   status = ''
 ) => {
   return async (dispatch: any) => {
@@ -119,13 +118,7 @@ export const fetchAllResponded = (
       }
     }
 
-    if (type === ReportType.USER) {
-      penaltyStatus = penalty === '' || penalty === 'all' ? undefined : penalty
-    }
-
-    if (type === ReportType.POST) {
-      reportStatus = status === '' || status === 'all' ? undefined : status
-    }
+    reportStatus = status === '' || status === 'all' ? undefined : status
 
     try {
       const filter = {
@@ -190,7 +183,7 @@ export const fetchAllResponded = (
             filter: {
               reportDate: reportDate ?? 'all',
               respondDate: respondDate ?? 'all',
-              penaltyStatus: penalty ?? 'all',
+              status: reportStatus ?? 'all',
             },
           },
         }

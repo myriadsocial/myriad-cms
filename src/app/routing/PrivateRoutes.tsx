@@ -1,8 +1,7 @@
 import {Suspense, lazy} from 'react'
 import {Redirect, Route, Switch} from 'react-router-dom'
-import {FallbackView} from '../../_metronic/partials'
+import {FallbackView} from '../../app/modules/loading/FallbackView'
 import {ReportType} from '../enums'
-import {DashboardWrapper} from '../pages/DashboardWrapper'
 
 export function PrivateRoutes() {
   const ReportedPostPage = lazy(() => import('../pages/ReportedPage'))
@@ -13,7 +12,6 @@ export function PrivateRoutes() {
   return (
     <Suspense fallback={<FallbackView />}>
       <Switch>
-        <Route path='/dashboard' component={DashboardWrapper} />
         <Route path='/posts/reported'>
           <ReportedPostPage type={ReportType.POST} />
         </Route>
@@ -26,8 +24,8 @@ export function PrivateRoutes() {
         <Route path='/users/deleted'>
           <RespondedUserPage type={ReportType.USER} />
         </Route>
-        <Redirect from='/auth' to='/dashboard' />
-        <Redirect exact from='/' to='/dashboard' />
+        <Redirect from='/auth' to='/posts/reported' />
+        <Redirect exact from='/' to='/posts/reported' />
         <Redirect to='error/404' />
       </Switch>
     </Suspense>

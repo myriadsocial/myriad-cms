@@ -218,35 +218,6 @@ export class LayoutSetup {
     }
   }
 
-  private static initAsideMenu(config: IAside): void {
-    // if (Theme::getOption('layout', 'aside/menu') === 'documentation') {
-    // 	self::$menu = new Menu( Theme::getOption('menu', 'documentation'), Theme::getPagePath() );
-    // } else {
-    // 	self::$menu = new Menu( Theme::getOption('menu', 'main'), Theme::getPagePath() );
-    // }
-    // if (Theme::getOption('layout', 'aside/menu-icons-display') === false) {
-    // 	self::$menu->displayIcons(false);
-    // }
-    // self::$menu->setIconType(Theme::getOption('layout', 'aside/menu-icon'));
-  }
-
-  // private static initSidebar(sidebarConfig: ISidebarConfig): void {
-  //   // / Set Sidebar enabled class
-  //   if (sidebarConfig.display) {
-  //     document.body.classList.add('sidebar-enabled')
-  //   } else {
-  //     return
-  //   }
-
-  //   // Set Sidebar shown status
-  //   if (sidebarConfig.shown) {
-  //     document.body.setAttribute('data-sidebar', 'on')
-  //   }
-
-  //   // Set Sidebar background color class
-  //   ThemeSetup.classes.sidebar.push(sidebarConfig.bgColor)
-  // }
-
   private static initFooter(config: IFooter): void {
     LayoutSetup.classes.footerContainer.push(`container${config.width === 'fluid' ? '-fluid' : ''}`)
   }
@@ -268,7 +239,6 @@ export class LayoutSetup {
     LayoutSetup.initContent(config.content)
     LayoutSetup.initAside(config.aside)
     LayoutSetup.initFooter(config.footer)
-    LayoutSetup.initAsideMenu(config.aside)
   }
 
   public static updatePartialConfig(fieldsToUpdate: Partial<ILayout>): ILayout {

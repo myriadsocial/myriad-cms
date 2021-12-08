@@ -67,11 +67,12 @@ const ReportActionModal: React.FC<Props> = ({showRespond, totalReporters, type, 
   }
 
   const activate = async () => {
+    console.log('hello')
     setShowModal(false)
     onHideRespond()
     dispatch(updateAllResponded(reportId, type))
-    return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}/restore`, {
-      method: 'POST',
+    return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}`, {
+      method: 'DELETE',
       mode: 'cors',
     })
   }

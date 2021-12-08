@@ -9,6 +9,7 @@ import {ErrorsContent} from '../modules/errors/ErrorsContent'
 import {LoadingContent} from '../modules/loading/LoadingContent'
 import {reportedPostTHeader, reportedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
+import {PageTitle} from '../../_metronic/layout/core'
 
 type Props = {
   type: ReportType
@@ -37,6 +38,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   if (error) return <ErrorsContent />
   return (
     <>
+    <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
       {loading ? (
         <LoadingContent tableHeader={tableHeader} tableType={TableType.REPORTED} type={type} />
       ) : (
