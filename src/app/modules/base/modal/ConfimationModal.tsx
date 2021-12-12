@@ -26,10 +26,7 @@ const ConfirmationModal: React.FC<Props> = ({showModal, onHide, onRemoved, table
         <Button variant='secondary' onClick={onHide}>
           Cancel
         </Button>
-        <Button
-          variant='info'
-          onClick={onRemoved}
-        >
+        <Button variant='info' onClick={onRemoved}>
           Remove
         </Button>
       </Modal.Footer>

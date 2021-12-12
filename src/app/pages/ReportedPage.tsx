@@ -38,7 +38,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   if (error) return <ErrorsContent />
   return (
     <>
-    <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
+      <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
       {loading ? (
         <LoadingContent tableHeader={tableHeader} tableType={TableType.REPORTED} type={type} />
       ) : (

@@ -123,11 +123,7 @@ export const fetchAllResponded = (
     try {
       const filter = {
         where: {
-          or: [
-            {status: ReportStatusType.IGNORED},
-            {status: ReportStatusType.REMOVED},
-            {status: ReportStatusType.APPROVED},
-          ],
+          or: [{status: ReportStatusType.IGNORED}, {status: ReportStatusType.REMOVED}],
           penaltyStatus: penaltyStatus,
           status: reportStatus,
         },
@@ -140,21 +136,13 @@ export const fetchAllResponded = (
             {
               referenceType: ReportType.POST,
               status: {
-                inq: [
-                  ReportStatusType.APPROVED,
-                  ReportStatusType.IGNORED,
-                  ReportStatusType.REMOVED,
-                ],
+                inq: [ReportStatusType.IGNORED, ReportStatusType.REMOVED],
               },
             },
             {
               referenceType: ReportType.COMMENT,
               status: {
-                inq: [
-                  ReportStatusType.APPROVED,
-                  ReportStatusType.IGNORED,
-                  ReportStatusType.REMOVED,
-                ],
+                inq: [ReportStatusType.IGNORED, ReportStatusType.REMOVED],
               },
             },
           ],

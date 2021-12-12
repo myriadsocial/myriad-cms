@@ -170,10 +170,13 @@ const TablePage: React.FC<Props> = (props) => {
                 <InputGroup.Text>
                   <i className='fas fa-search'></i>
                 </InputGroup.Text>
-                <Form.Select value={type === ReportType.USER ? userStatus : postStatus} onChange={onChangedReportStatus}>
+                <Form.Select
+                  value={type === ReportType.USER ? userStatus : postStatus}
+                  onChange={onChangedReportStatus}
+                >
                   <option disabled>Post Status</option>
                   <option value='all'>All</option>
-                  <option value='removed'>{type === ReportType.USER ? "Banned" : "Removed"}</option>
+                  <option value='removed'>{type === ReportType.USER ? 'Banned' : 'Removed'}</option>
                   <option value='ignored'>Ignored</option>
                 </Form.Select>
               </InputGroup>
