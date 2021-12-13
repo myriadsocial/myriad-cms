@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
+import ReactMarkdown from 'react-markdown'
 import {ReportStatusType, ReportType, TableType} from '../../../../enums'
 import {Report} from '../../../../interfaces'
 import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
 import {useDispatch} from 'react-redux'
 import {fetchAllReporters} from '../../../reporters/redux/action'
-import {ReportActionModal} from '../../modal/ReportActionModal'
+import {ReportActionModal} from '../../../reporters'
 import {usePostReportList, useDefaultProfileImageUrl, usePostStatusList} from '../../../../data/'
+import {PostRender, ShowMore} from '../../../postRender'
+import remarkGFM from 'remark-gfm';
+import remarkHTML from 'remark-html';
 
 type Props = {
   tableType: TableType
@@ -15,11 +19,12 @@ type Props = {
 
 const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   const defaultProfilePictureURL = useDefaultProfileImageUrl()
-  const [showRespond, setShowRespond] = useState<boolean>(false);
+  const [showRespond, setShowRespond] = useState<boolean>(false)
+  const [maxLength, setMaxLength] = useState<number | undefined>(250)
   const dispatch = useDispatch()
 
   const onHideRespond = () => {
-    setShowRespond(false);
+    setShowRespond(false)
   }
 
   const postReportList = usePostReportList()
@@ -32,7 +37,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   const statusColor = postStatus?.color
 
   const getReporters = () => {
-    setShowRespond(true);
+    setShowRespond(true)
     dispatch(fetchAllReporters(data.id, data.referenceType, data.referenceId))
   }
 
@@ -88,7 +93,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
   // Reported Detail Profile
   let profileImage = data.reportedDetail.user.profilePictureURL ?? defaultProfilePictureURL
   let reportedName = data.reportedDetail.user.name
-  let reportedDetail = data.reportedDetail.text
+  let reportedDetail = data.reportedDetail.text as string
   // let tableData = null;
 
   if (type === ReportType.USER) {
@@ -97,6 +102,51 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
       new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString(
         'en-GB'
       )
+  }
+
+  const reportedInfo = () => {
+    if (type === ReportType.USER) {
+      const userReportedInfo = 'Join date ' +
+        new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString(
+          'en-GB'
+        )
+
+      return <>{userReportedInfo}</>
+    }
+
+    if (type === ReportType.COMMENT) {
+      return <>{data.reportedDetail.text}</>
+    }
+
+    if (data.reportedDetail.platform === 'reddit') {
+      const postText = data.reportedDetail.text ?? '';
+      return (
+        <>
+          <ReactMarkdown skipHtml remarkPlugins={[remarkGFM, remarkHTML]}>
+            {postText.slice(0, maxLength)}
+          </ReactMarkdown>
+
+          {
+            !!maxLength && postText.length > maxLength ? (
+              <ShowMore onClick={() => setMaxLength(undefined)}/>
+            ) : <></>
+          }
+        </>
+      )
+    }
+
+    if (data.reportedDetail.platform === 'twitter') {
+      return <>{data.reportedDetail.text ?? ''}</>
+    }
+
+    return (
+      <PostRender
+        postText={reportedDetail} 
+        max={maxLength} 
+        onShowAll={() => setMaxLength(undefined)} 
+        onShowLess={() => setMaxLength(250)}
+      />
+    )
   }
 
   const tableData =
@@ -128,7 +178,9 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
               <span className='text-dark fw-bolder text-hover-primary mb-1 fs-6'>
                 {reportedName}
               </span>
-              <span className='text-muted fw-bold text-muted d-block fs-7'>{reportedDetail}</span>
+              <span className='text-muted fw-bold text-muted d-block fs-7'>
+                {reportedInfo()}
+              </span>
             </div>
           </div>
         </td>
