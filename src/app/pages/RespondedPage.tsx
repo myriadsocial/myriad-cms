@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {RespondedTable} from '../modules/responded/components/RespondTable'
+import {RespondedTable} from '../modules/responded'
 import {ReportType, TableType} from '../enums'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../setup'

@@ -64,7 +64,11 @@ export function Login() {
       {/* begin::Heading */}
       <div className='text-center mb-10'>
         <div className='mb-12'>
-          <img alt='Logo' src="https://pbs.twimg.com/profile_images/1407599051579617281/-jHXi6y5_400x400.jpg" className='h-80px' />
+          <img
+            alt='Logo'
+            src='https://pbs.twimg.com/profile_images/1407599051579617281/-jHXi6y5_400x400.jpg'
+            className='h-80px'
+          />
         </div>
         <h1 className='text-dark mb-3'>Welcome to Myriad Admin</h1>
       </div>

@@ -13,7 +13,7 @@ const AsideDefault: React.FC = () => {
     <div className={clsx('aside', classes.aside.join(' '))}>
       {/* begin::Brand */}
       <div className='aside-logo flex-column-auto' id='kt_aside_logo'>
-        <Link to='/dashboard'>
+        <Link to='/posts/reported'>
           <h1 className='text-light'>Myriad Admin</h1>
         </Link>
       </div>

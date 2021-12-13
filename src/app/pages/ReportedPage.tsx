@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {ReportedTable} from '../modules/reported/components/ReportTable'
+import {ReportedTable} from '../modules/reported'
 import {ReportType, TableType} from '../enums'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../setup'

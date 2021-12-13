@@ -1,13 +1,13 @@
-import React, {useRef, useEffect} from 'react'
-import {useLocation} from 'react-router'
+import React, {useRef} from 'react'
+// import {useLocation} from 'react-router'
 import clsx from 'clsx'
 import {AsideMenuMain} from './AsideMenuMain'
-import {
-  DrawerComponent,
-  MenuComponent,
-  ScrollComponent,
-  ToggleComponent,
-} from '../../../assets/ts/components'
+// import {
+//   DrawerComponent,
+//   MenuComponent,
+//   ScrollComponent,
+//   ToggleComponent,
+// } from '../../../assets/ts/components'
 
 type Props = {
   asideMenuCSSClasses: string[]
@@ -15,20 +15,20 @@ type Props = {
 
 const AsideMenu: React.FC<Props> = ({asideMenuCSSClasses}) => {
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const {pathname} = useLocation()
+  // const {pathname} = useLocation()
 
-  useEffect(() => {
-    setTimeout(() => {
-      MenuComponent.reinitialization()
-      DrawerComponent.reinitialization()
-      ToggleComponent.reinitialization()
-      ScrollComponent.reinitialization()
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = 0
-      }
-    }, 50)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     MenuComponent.reinitialization()
+  //     DrawerComponent.reinitialization()
+  //     ToggleComponent.reinitialization()
+  //     ScrollComponent.reinitialization()
+  //     if (scrollRef.current) {
+  //       scrollRef.current.scrollTop = 0
+  //     }
+  //   }, 50)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [pathname])
 
   return (
     <div

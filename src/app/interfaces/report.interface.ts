@@ -17,6 +17,8 @@ export interface Report {
     text?: string
     platform?: string
     postId?: string
+    tags?: string[]
+    mentions?: User[]
     user: {
       id: string
       name: string
@@ -26,6 +28,23 @@ export interface Report {
     }
   }
   reporters: Reporter[]
+}
+
+export interface Post {
+  title?: string
+  text: string
+  tags: string[]
+  mentions: User[]
+  platform?: string
+  postId?: string
+}
+
+export interface User {
+  id: string
+  name: string
+  username: string
+  profilePictureURL?: string
+  createdAt?: string
 }
 
 export interface ReportWithPaginationData {
