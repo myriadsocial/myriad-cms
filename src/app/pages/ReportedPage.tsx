@@ -10,21 +10,33 @@ import {LoadingContent} from '../modules/loading/LoadingContent'
 import {reportedPostTHeader, reportedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
 import {PageTitle} from '../../_metronic/layout/core'
+import { useHistory } from 'react-router-dom'
 
 type Props = {
   type: ReportType
 }
 
 const ReportedPage: React.FC<Props> = ({type}) => {
-  const [pageNumber, setPageNumber] = useState(1)
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  let search = window.location.search
+  let params = new URLSearchParams(search)
+
+  const [pageNumber, setPageNumber] = useState(parseInt(params.get('page') ?? '1'))
   const [reportDate, setReportDate] = useState('')
   const [category, setCategory] = useState('')
   const {reportedPost, reportedUser, loading, error} = useSelector<RootState, ReportedState>(
     (state) => state.reported
   )
-  const dispatch = useDispatch()
 
-  const changedPage = (number: number) => setPageNumber(number)
+  const changedPage = (number: number) => {
+    setPageNumber(number)
+    history.push({
+      pathname: '/posts/reported',
+      search: '?page=' + number
+    })
+  }
   const changedReportDate = (date: string) => setReportDate(date)
   const changedCategory = (category: string) => setCategory(category)
 
