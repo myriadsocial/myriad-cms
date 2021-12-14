@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useLayoutEffect, useState} from 'react'
 import {ReportedTable} from '../modules/reported'
 import {ReportType, TableType} from '../enums'
 import {useDispatch, useSelector} from 'react-redux'
@@ -6,7 +6,6 @@ import {RootState} from '../../setup'
 import {ReportedState} from '../modules/reported/redux/reducer'
 import {fetchAllReported} from '../modules/reported/redux/action'
 import {ErrorsContent} from '../modules/errors/ErrorsContent'
-import {LoadingContent} from '../modules/loading/LoadingContent'
 import {reportedPostTHeader, reportedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
 import {PageTitle} from '../../_metronic/layout/core'
@@ -42,7 +41,9 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const changedCategory = (category: string) => setCategory(category)
   const changedPostType = (postType: string) => setPostType(postType)
 
-  useEffect(() => {
+  const data = type === ReportType.POST ? reportedPost : reportedUser
+
+  useLayoutEffect(() => {
     dispatch(fetchAllReported(
       pageNumber, 
       type, 
@@ -59,26 +60,22 @@ const ReportedPage: React.FC<Props> = ({type}) => {
     postType
   ])
 
-  const data = type === ReportType.POST ? reportedPost : reportedUser
   const tableHeader = type === ReportType.POST ? reportedPostTHeader : reportedUserTHeader
 
   if (error) return <ErrorsContent />
   return (
     <>
       <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
-      {loading ? (
-        <LoadingContent tableHeader={tableHeader} tableType={TableType.REPORTED} type={type} />
-      ) : (
-        <ReportedTable
-          tableType={TableType.REPORTED}
-          type={type}
-          data={data}
-          tableHeader={tableHeader}
-          changedReportDate={changedReportDate}
-          changedCategory={changedCategory}
-          changedPostType={changedPostType}
-        />
-      )}
+      <ReportedTable
+        tableType={TableType.REPORTED}
+        type={type}
+        data={data}
+        tableHeader={tableHeader}
+        changedReportDate={changedReportDate}
+        changedCategory={changedCategory}
+        changedPostType={changedPostType}
+        loading={loading}
+      />
       <Pagination className='h-25' onChangedPage={changedPage} paginationMeta={data.meta} />
     </>
   )

@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../setup'
 import {RespondedState} from '../modules/responded/redux/reducer'
 import {fetchAllResponded} from '../modules/responded/redux/action'
-import {LoadingContent} from '../modules/loading/LoadingContent'
 import {ErrorsContent} from '../modules/errors/ErrorsContent'
 import {respondedPostTHeader, deletedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
@@ -61,21 +60,18 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   return (
     <>
       <PageTitle>{`MANAGE ${type.toUpperCase()}`}</PageTitle>
-      {loading ? (
-        <LoadingContent tableHeader={tableHeader} tableType={TableType.RESPONDED} type={type} />
-      ) : (
-        <RespondedTable
-          tableType={TableType.RESPONDED}
-          type={type}
-          data={data}
-          tableHeader={tableHeader}
-          changedReportDate={changedReportDate}
-          changedRespondDate={changedRespondDate}
-          changedPenalty={changedPenalty}
-          changedReport={changedReport}
-          changedPostType={changedPostType}
-        />
-      )}
+      <RespondedTable
+        tableType={TableType.RESPONDED}
+        type={type}
+        data={data}
+        tableHeader={tableHeader}
+        changedReportDate={changedReportDate}
+        changedRespondDate={changedRespondDate}
+        changedPenalty={changedPenalty}
+        changedReport={changedReport}
+        changedPostType={changedPostType}
+        loading={loading}
+      />
       <Pagination className='h-25' onChangedPage={changedPage} paginationMeta={data.meta} />
     </>
   )

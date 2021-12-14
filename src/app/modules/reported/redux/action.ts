@@ -58,8 +58,6 @@ export const fetchAllReported = (
     })
 
     let newOrder = undefined
-    let reportType = undefined
-    let postTy = undefined
 
     switch (reportDate) {
       case 'newest':
@@ -74,29 +72,20 @@ export const fetchAllReported = (
         newOrder = ['createdAt DESC'];
     }
 
-    if (type === ReportType.POST) {
-      reportType = category === '' || category === 'all' ? undefined : category
-      postTy = postType === '' || postType === 'all' ? undefined : postType
-    }
-
-
     try {
       const filter = {
         where: {
           status: ReportStatusType.PENDING,
-          type: reportType,
+          type: type === ReportType.USER ? undefined : (
+            category === '' || category === 'all' ? undefined : category
+          ),
+          referenceType: type === ReportType.USER ? ReportType.USER : (
+            postType === '' || postType === 'all' ? {
+              inq: [ReportType.POST, ReportType.COMMENT]
+            } : postType
+          ),
         },
         order: newOrder,
-      }
-
-      if (type === ReportType.COMMENT || type === ReportType.POST) {
-        filter.where = Object.assign(filter.where, {
-          referenceType: postTy,
-        })
-      } else {
-        filter.where = Object.assign(filter.where, {
-          referenceType: ReportType.USER,
-        })
       }
 
       //TODO: Moved to env
@@ -116,7 +105,7 @@ export const fetchAllReported = (
             ...data,
             filter: {
               reportDate: reportDate ?? 'all',
-              category: reportType,
+              category: category === '' ? 'all' : category,
             },
           },
         }
@@ -127,8 +116,8 @@ export const fetchAllReported = (
             ...data,
             filter: {
               reportDate: reportDate ?? 'all',
-              category: category ?? 'all',
-              postType: postTy ?? 'all',
+              category: category === '' ? 'all' : category,
+              postType: postType === '' ? 'all' : postType,
             },
           },
         }

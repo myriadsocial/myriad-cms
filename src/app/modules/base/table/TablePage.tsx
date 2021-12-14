@@ -16,6 +16,7 @@ type Props = {
   tableHeader: TableHeader
   type: ReportType
   data: ReportWithPaginationData
+  loading: Boolean
   changedReportDate: (date: string) => void
   changedCategory?: (category: string) => void
   changedRespondDate?: (date: string) => void
@@ -31,6 +32,7 @@ const TablePage: React.FC<Props> = (props) => {
     tableHeader,
     type,
     data,
+    loading,
     changedReportDate,
     changedCategory,
     changedRespondDate,
@@ -109,22 +111,24 @@ const TablePage: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={`card ${className}`} style={{overflowY: 'scroll', height: '75%'}}>
-        <div className='card-header border-0 pt-5 row'>
+      <div className={`card ${className}`} style={{overflowY: 'scroll', height: '800px'}}>
+        <div className='card-header border-0 mt-5 row'>
           <h3 className='card-title align-items-start flex-column col'>
             <span className='card-label fw-bolder fs-3 mb-1'>{title}</span>
             <span className='text-muted mt-1 fw-bold fs-7'>{totalReport} reports</span>
           </h3>
           <div className='col'></div>
           <div className='col'></div>
-          <InputGroup className='mb-3 col'>
-            <FormControl placeholder='Search' aria-label='Search' aria-describedby='basic-addon2' />
-            <InputGroup.Text style={{cursor: 'pointer'}}>
-              <i className='fas fa-search'></i>
-            </InputGroup.Text>
-          </InputGroup>
+          <div className='mb-3 col pt-3'>
+            <InputGroup >
+              <FormControl placeholder='Search' aria-label='Search' aria-describedby='basic-addon2' />
+              <InputGroup.Text style={{cursor: 'pointer'}}>
+                <i className='fas fa-search'></i>
+              </InputGroup.Text>
+            </InputGroup>
+          </div>
         </div>
-        <div className='card-body py-3'>
+        <div className='card-body py-3' style={{flex: '0 1 auto'}}>
           <div className='mb-3 d-inline-flex'>
             <InputGroup>
               <InputGroup.Text>
@@ -222,7 +226,8 @@ const TablePage: React.FC<Props> = (props) => {
               <></>
             )}
           </div>
-
+        </div>
+        <div className='card-body py-3'>
           <div className='table-responsive'>
             <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
               <thead>
@@ -239,16 +244,26 @@ const TablePage: React.FC<Props> = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {data.data.map((reported) => {
-                  return (
-                    <TableContent
-                      key={reported.id}
-                      tableType={tableType}
-                      data={reported}
-                      type={type}
-                    />
+                {
+                  loading ? (
+                    <tr>
+                      <td>
+                        <div>Please wait...</div>
+                      </td>
+                    </tr>
+                  ) : (
+                    data.data.map((reported) => {
+                      return (
+                        <TableContent
+                          key={reported.id}
+                          tableType={tableType}
+                          data={reported}
+                          type={type}
+                        />
+                      )
+                    })
                   )
-                })}
+                }
               </tbody>
             </table>
           </div>

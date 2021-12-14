@@ -9,6 +9,7 @@ type Props = {
   type: ReportType
   data: ReportWithPaginationData
   tableHeader: TableHeader
+  loading: Boolean
   changedReportDate: (date: string) => void
   changedRespondDate: (date: string) => void
   changedPenalty: (status: string) => void
@@ -23,6 +24,7 @@ const RespondedTable: React.FC<Props> = (props) => {
     type,
     data,
     tableHeader,
+    loading,
     changedReportDate,
     changedRespondDate,
     changedPenalty,
@@ -43,6 +45,7 @@ const RespondedTable: React.FC<Props> = (props) => {
         changedPenalty={changedPenalty}
         changedReport={changedReport}
         changedPostType={changedPostType}
+        loading={loading}
       />
     </>
   )

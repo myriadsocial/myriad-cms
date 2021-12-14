@@ -59,9 +59,6 @@ export const fetchAllResponded = (
     })
 
     let newOrder = undefined
-    let penaltyStatus = undefined
-    let reportStatus = undefined
-    let postTy = undefined
 
     if (reportDate === 'newest') {
       switch (respondDate) {
@@ -93,33 +90,19 @@ export const fetchAllResponded = (
       }
     }
 
-    reportStatus = status === '' || status === 'all' ? undefined : status
-
-    if (type === ReportType.POST) {
-      postTy = postType === '' || postType === 'all' ? undefined : postType
-    }
-
     try {
       const filter = {
         where: {
-          or: [{status: ReportStatusType.IGNORED}, {status: ReportStatusType.REMOVED}],
-          penaltyStatus: penaltyStatus,
-          status: reportStatus,
+          status: status === '' || status === 'all' ? {
+            inq: [ReportStatusType.IGNORED, ReportStatusType.REMOVED]
+          } : status,
+          referenceType: type === ReportType.USER ? ReportType.USER : (
+            postType === '' || postType === 'all' ? {
+              inq: [ReportType.POST, ReportType.COMMENT]
+            } : postType
+          ),
         },
         order: newOrder,
-      }
-
-      if (type === ReportType.COMMENT || type === ReportType.POST) {
-        filter.where = Object.assign(filter.where, {
-          referenceType: postTy,
-          status: {
-            inq: [ReportStatusType.IGNORED, ReportStatusType.REMOVED],
-          },
-        })
-      } else {
-        filter.where = Object.assign(filter.where, {
-          referenceType: ReportType.USER,
-        })
       }
 
       //TODO: Moved to env
@@ -140,7 +123,7 @@ export const fetchAllResponded = (
             filter: {
               reportDate: reportDate ?? 'all',
               respondDate: respondDate ?? 'all',
-              status: reportStatus ?? 'all',
+              status: status === '' ? 'all' : status,
             },
           },
         }
@@ -152,8 +135,8 @@ export const fetchAllResponded = (
             filter: {
               reportDate: reportDate ?? 'all',
               respondDate: respondDate ?? 'all',
-              status: reportStatus ?? 'all',
-              postType: postTy ?? 'all',
+              status: status === '' ? 'all' : status,
+              postType: postType === '' ? 'all' : postType,
             },
           },
         }
