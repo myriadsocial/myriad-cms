@@ -18,8 +18,9 @@ const initialData = {
     itemsPerPage: 0,
   },
   filter: {
-    reportDate: 'all',
+    reportDate: 'newest',
     category: 'all',
+    postType: 'all'
   },
 }
 

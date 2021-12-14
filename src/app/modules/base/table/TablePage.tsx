@@ -21,6 +21,7 @@ type Props = {
   changedRespondDate?: (date: string) => void
   changedPenalty?: (status: string) => void
   changedReport?: (status: string) => void
+  changedPostType?: (postType: string) => void
 }
 
 const TablePage: React.FC<Props> = (props) => {
@@ -34,6 +35,7 @@ const TablePage: React.FC<Props> = (props) => {
     changedCategory,
     changedRespondDate,
     changedReport,
+    changedPostType,
   } = props
 
   const {title, field1, field2, field3, field4, field5} = tableHeader
@@ -45,14 +47,14 @@ const TablePage: React.FC<Props> = (props) => {
   )
 
   const {
-    filter: {reportDate: reportedReportDatePost, category: categoryPost},
+    filter: {reportDate: reportedReportDatePost, category: categoryPost, postType: postTypeReported},
   } = reportedPost
   const {
     filter: {reportDate: reportedReportDateUser},
   } = reportedUser
 
   const {
-    filter: {reportDate: respondedReportDatePost, respondDate: respondDatePost, status: postStatus},
+    filter: {reportDate: respondedReportDatePost, respondDate: respondDatePost, status: postStatus, postType: postTypeResponded},
   } = respondedPost
   const {
     filter: {reportDate: respondedReportDateUser, respondDate: respondDateUser, status: userStatus},
@@ -100,6 +102,11 @@ const TablePage: React.FC<Props> = (props) => {
     if (changedReport) changedReport(value)
   }
 
+  const onChangedPostType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value
+    if (changedPostType) changedPostType(value)
+  }
+
   return (
     <>
       <div className={`card ${className}`} style={{overflowY: 'scroll', height: '75%'}}>
@@ -125,27 +132,40 @@ const TablePage: React.FC<Props> = (props) => {
               </InputGroup.Text>
               <Form.Select value={reportDate} onChange={onChangedOrder}>
                 <option disabled>Sort date</option>
-                <option value='all'>All</option>
-                <option value='newest'>Newest - oldest</option>
-                <option value='oldest'> Oldest - newest</option>
+                <option value='newest'>Newest</option>
+                <option value='oldest'>Oldest</option>
               </Form.Select>
             </InputGroup>
             <span className='mx-5'></span>
             {type === ReportType.POST && tableType === TableType.REPORTED ? (
-              <InputGroup>
-                <InputGroup.Text>
-                  <i className='fas fa-filter'></i>
-                </InputGroup.Text>
-                <Form.Select value={category} onChange={onChangedCategory}>
-                  <option disabled>Filter category</option>
-                  <option value='all'>All Category</option>
-                  {postCategories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.title}
-                    </option>
-                  ))}
-                </Form.Select>
-              </InputGroup>
+              <>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <i className='fas fa-filter'></i>
+                  </InputGroup.Text>
+                  <Form.Select value={category} onChange={onChangedCategory}>
+                    <option disabled>Filter category</option>
+                    <option value='all'>All Category</option>
+                    {postCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.title}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </InputGroup>
+                <span className='mx-5'></span>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <i className='fas fa-filter'></i>
+                  </InputGroup.Text>
+                  <Form.Select value={postTypeReported} onChange={onChangedPostType}>
+                  <option disabled>Post Type</option>
+                  <option value='all'>All</option>
+                  <option value='post'>Post</option>
+                  <option value='comment'>Comment</option>
+                  </Form.Select>
+                </InputGroup>
+              </>
             ) : (
               <></>
             )}
@@ -156,8 +176,7 @@ const TablePage: React.FC<Props> = (props) => {
                 </InputGroup.Text>
                 <Form.Select value={respondDate} onChange={onChangedRespondDate}>
                   <option disabled>Respond Date</option>
-                  <option value='all'>All</option>
-                  <option value='latest'>Latest</option>
+                  <option value='newest'>Newest</option>
                   <option value='oldest'>Oldest</option>
                 </Form.Select>
               </InputGroup>
@@ -178,6 +197,25 @@ const TablePage: React.FC<Props> = (props) => {
                   <option value='all'>All</option>
                   <option value='removed'>{type === ReportType.USER ? 'Banned' : 'Removed'}</option>
                   <option value='ignored'>Ignored</option>
+                </Form.Select>
+              </InputGroup>
+            ) : (
+              <></>
+            )}
+            <span className='mx-5'></span>
+            {type === ReportType.POST && tableType === TableType.RESPONDED ? (
+              <InputGroup>
+                <InputGroup.Text>
+                  <i className='fas fa-search'></i>
+                </InputGroup.Text>
+                <Form.Select
+                  value={postTypeResponded}
+                  onChange={onChangedPostType}
+                >
+                  <option disabled>Post Type</option>
+                  <option value='all'>All</option>
+                  <option value='post'>Post</option>
+                  <option value='comment'>Comment</option>
                 </Form.Select>
               </InputGroup>
             ) : (

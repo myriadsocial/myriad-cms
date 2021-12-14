@@ -49,7 +49,8 @@ export const fetchAllReported = (
   pageNumber = 1,
   type: ReportType,
   reportDate = '',
-  category = ''
+  category = '',
+  postType = ''
 ) => {
   return async (dispatch: any) => {
     dispatch({
@@ -58,22 +59,26 @@ export const fetchAllReported = (
 
     let newOrder = undefined
     let reportType = undefined
+    let postTy = undefined
 
-    if (reportDate === 'newest') {
-      newOrder = ['createdAt DESC']
-    }
+    switch (reportDate) {
+      case 'newest':
+        newOrder = ['createdAt DESC'];
+        break;
 
-    if (reportDate === 'oldest') {
-      newOrder = ['createdAt ASC']
-    }
+      case 'oldest': 
+        newOrder = ['createdAt ASC'];
+        break;
 
-    if (reportDate === 'all') {
-      newOrder = ['']
+      default:
+        newOrder = ['createdAt DESC'];
     }
 
     if (type === ReportType.POST) {
       reportType = category === '' || category === 'all' ? undefined : category
+      postTy = postType === '' || postType === 'all' ? undefined : postType
     }
+
 
     try {
       const filter = {
@@ -86,14 +91,7 @@ export const fetchAllReported = (
 
       if (type === ReportType.COMMENT || type === ReportType.POST) {
         filter.where = Object.assign(filter.where, {
-          or: [
-            {
-              referenceType: ReportType.POST,
-            },
-            {
-              referenceType: ReportType.COMMENT,
-            },
-          ],
+          referenceType: postTy,
         })
       } else {
         filter.where = Object.assign(filter.where, {
@@ -130,6 +128,7 @@ export const fetchAllReported = (
             filter: {
               reportDate: reportDate ?? 'all',
               category: category ?? 'all',
+              postType: postTy ?? 'all',
             },
           },
         }

@@ -18,9 +18,10 @@ const initialData = {
     itemsPerPage: 0,
   },
   filter: {
-    reportDate: 'all',
-    respondDate: 'all',
+    reportDate: 'newest',
+    respondDate: 'newest',
     penaltyStatus: 'all',
+    postType: 'all',
     status: 'all',
   },
 }

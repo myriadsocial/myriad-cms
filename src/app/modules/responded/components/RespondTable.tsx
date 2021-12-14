@@ -14,6 +14,7 @@ type Props = {
   changedPenalty: (status: string) => void
   changedReport: (status: string) => void
   changedCategory?: (category: string) => void
+  changedPostType?: (postType: string) => void
 }
 
 const RespondedTable: React.FC<Props> = (props) => {
@@ -26,6 +27,7 @@ const RespondedTable: React.FC<Props> = (props) => {
     changedRespondDate,
     changedPenalty,
     changedReport,
+    changedPostType,
   } = props
 
   return (
@@ -40,6 +42,7 @@ const RespondedTable: React.FC<Props> = (props) => {
         changedRespondDate={changedRespondDate}
         changedPenalty={changedPenalty}
         changedReport={changedReport}
+        changedPostType={changedPostType}
       />
     </>
   )

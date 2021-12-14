@@ -21,6 +21,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const [penalty, setPenalty] = useState('')
   const [reportStatus, setReportStatus] = useState('')
   const [respondDate, setRespondDate] = useState('')
+  const [postType, setPostType] = useState('')
 
   const {respondedPost, respondedUser, loading, error} = useSelector<RootState, RespondedState>(
     (state) => state.responded
@@ -32,10 +33,26 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const changedRespondDate = (date: string) => setRespondDate(date)
   const changedPenalty = (status: string) => setPenalty(status)
   const changedReport = (status: string) => setReportStatus(status)
+  const changedPostType = (postType: string) => setPostType(postType)
 
   useEffect(() => {
-    dispatch(fetchAllResponded(pageNumber, type, reportDate, respondDate, reportStatus))
-  }, [pageNumber, type, dispatch, reportDate, respondDate, penalty, reportStatus])
+    dispatch(fetchAllResponded(
+      pageNumber, 
+      type, 
+      reportDate, 
+      respondDate, 
+      reportStatus, 
+      postType))
+  }, [
+    pageNumber, 
+    type, 
+    dispatch, 
+    reportDate, 
+    respondDate, 
+    penalty, 
+    reportStatus, 
+    postType
+  ])
 
   const data = type === ReportType.POST ? respondedPost : respondedUser
   const tableHeader = type === ReportType.POST ? respondedPostTHeader : deletedUserTHeader
@@ -56,6 +73,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
           changedRespondDate={changedRespondDate}
           changedPenalty={changedPenalty}
           changedReport={changedReport}
+          changedPostType={changedPostType}
         />
       )}
       <Pagination className='h-25' onChangedPage={changedPage} paginationMeta={data.meta} />

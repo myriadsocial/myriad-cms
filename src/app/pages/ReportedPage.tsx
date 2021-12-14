@@ -10,7 +10,7 @@ import {LoadingContent} from '../modules/loading/LoadingContent'
 import {reportedPostTHeader, reportedUserTHeader} from '../data'
 import {Pagination} from '../modules/base/bar/Paginantion'
 import {PageTitle} from '../../_metronic/layout/core'
-import { useHistory } from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 type Props = {
   type: ReportType
@@ -26,6 +26,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const [pageNumber, setPageNumber] = useState(parseInt(params.get('page') ?? '1'))
   const [reportDate, setReportDate] = useState('')
   const [category, setCategory] = useState('')
+  const [postType, setPostType] = useState('')
   const {reportedPost, reportedUser, loading, error} = useSelector<RootState, ReportedState>(
     (state) => state.reported
   )
@@ -39,10 +40,24 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   }
   const changedReportDate = (date: string) => setReportDate(date)
   const changedCategory = (category: string) => setCategory(category)
+  const changedPostType = (postType: string) => setPostType(postType)
 
   useEffect(() => {
-    dispatch(fetchAllReported(pageNumber, type, reportDate, category))
-  }, [pageNumber, type, dispatch, reportDate, category])
+    dispatch(fetchAllReported(
+      pageNumber, 
+      type, 
+      reportDate, 
+      category, 
+      postType
+    ))
+  }, [
+    pageNumber, 
+    type, 
+    dispatch, 
+    reportDate, 
+    category, 
+    postType
+  ])
 
   const data = type === ReportType.POST ? reportedPost : reportedUser
   const tableHeader = type === ReportType.POST ? reportedPostTHeader : reportedUserTHeader
@@ -61,6 +76,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
           tableHeader={tableHeader}
           changedReportDate={changedReportDate}
           changedCategory={changedCategory}
+          changedPostType={changedPostType}
         />
       )}
       <Pagination className='h-25' onChangedPage={changedPage} paginationMeta={data.meta} />

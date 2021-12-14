@@ -56,5 +56,6 @@ export interface ReportWithPaginationData {
     penaltyStatus?: string
     respondDate?: string
     status?: string
+    postType?: string
   }
 }
