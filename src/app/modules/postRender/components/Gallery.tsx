@@ -61,9 +61,9 @@ export const Gallery: React.FC<Props> = (props) => {
 				<Modal.Body>
 					<Carousel>
 						{
-							images.map(image => {
+							images.map((image, index) => {
 								return (
-									<CarouselItem>
+									<CarouselItem key={index}>
 										<div 
 											style={{
 												height: '500px', 

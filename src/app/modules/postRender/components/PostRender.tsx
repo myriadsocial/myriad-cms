@@ -84,6 +84,8 @@ export const PostRender: React.FC<Props> = (props) => {
     return render
   }
 
+  let count = 0;
+
   const renderElement = useCallback(
     (node, images: string[] = []) => {
       const onShowAllText = () => {
@@ -103,8 +105,11 @@ export const PostRender: React.FC<Props> = (props) => {
           ))
         }
 
+        count++
+
         return (
-          <span            
+          <span  
+            key={count}          
             style={{
               fontWeight: node.bold ? 600 : 400,
               fontStyle: node.italic ? 'italic' : 'none',
@@ -122,72 +127,74 @@ export const PostRender: React.FC<Props> = (props) => {
 
       const children = node?.children ? node.children.map((node: any) => renderElement(node)) : ''
 
+      count++
+
       switch (node.type) {
         case ELEMENT_BLOCKQUOTE:
           return (
             <blockquote>
-              <p >{children}</p>
+              <p key={count}>{children}</p>
             </blockquote>
           )
 
         case ELEMENT_PARAGRAPH:
           if (showMore) {
-            return <span>{children}</span>
+            return <span key={count}>{children}</span>
           }
 
-          return <p>{children}</p>
+          return <p key={count}>{children}</p>
 
         case ELEMENT_H1:
-          return <h1>{children}</h1>
+          return <h1 key={count}>{children}</h1>
 
         case ELEMENT_H2:
-          return <h2>{children}</h2>
+          return <h2 key={count}>{children}</h2>
 
         case ELEMENT_H3:
-          return <h3>{children}</h3>
+          return <h3 key={count}>{children}</h3>
 
         case ELEMENT_H4:
-          return <h4>{children}</h4>
+          return <h4 key={count}>{children}</h4>
 
         case ELEMENT_H5:
-          return <h5>{children}</h5>
+          return <h5 key={count}>{children}</h5>
 
         case ELEMENT_H6:
-          return <h6>{children}</h6>
+          return <h6 key={count}>{children}</h6>
 
         case ELEMENT_ALIGN_CENTER:
-          return <div style={{textAlign: 'center'}}>{children}</div>
+          return <div key={count} style={{textAlign: 'center'}}>{children}</div>
 
         case ELEMENT_ALIGN_RIGHT:
-          return <div style={{textAlign: 'right'}}>{children}</div>
+          return <div key={count} style={{textAlign: 'right'}}>{children}</div>
 
         case ELEMENT_ALIGN_LEFT:
-          return <div style={{textAlign: 'left'}}>{children}</div>
+          return <div key={count} style={{textAlign: 'left'}}>{children}</div>
 
         case ELEMENT_ALIGN_JUSTIFY:
-          return <div style={{textAlign: 'justify'}}>{children}</div>
+          return <div key={count} style={{textAlign: 'justify'}}>{children}</div>
 
         case ELEMENT_UL:
-          return <ul>{children}</ul>
+          return <ul key={count}>{children}</ul>
 
         case ELEMENT_OL:
-          return <ol>{children}</ol>
+          return <ol key={count}>{children}</ol>
 
         case ELEMENT_LIC:
-          return <li>{children}</li>
+          return <li key={count}>{children}</li>
 
         case ELEMENT_IMAGE:
-          return <Gallery images={images}/>
+          return <Gallery key={count} images={images}/>
 
         case ELEMENT_MEDIA_EMBED:
-          return <Video url={node.url}/>
+          return <Video key={count} url={node.url}/>
 
         case ELEMENT_LINK:
-          return <a href={escapeHTML(node.url)}>{children}</a>
+          return <a key={count} href={escapeHTML(node.url)}>{children}</a>
 
 				case ELEMENT_HASHTAG:
 					return (
-						<a href={`${process.env.REACT_APP_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}>
+						<a key={count} href={`${process.env.REACT_APP_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}>
 							<span                
 								style={{
 									cursor: 'pointer',
@@ -211,7 +218,7 @@ export const PostRender: React.FC<Props> = (props) => {
 					return children;
       }
     },
-    [showMore, onShowLess, onShowAll, max]
+    [showMore, onShowLess, onShowAll, max, count]
   )
 
   return <>{renderPost()}</>

@@ -20,7 +20,8 @@ export const Video: React.FC<Props> = ({url}) => {
 				url={url} 
 				controls={true} 
 				playing={false} 
-				stopOnUnmount={true} 
+				stopOnUnmount={true}
+				width={'100%'}
 			/>
 		</div>
 	)
