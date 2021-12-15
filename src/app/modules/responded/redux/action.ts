@@ -59,35 +59,25 @@ export const fetchAllResponded = (
     })
 
     let newOrder = undefined
-
-    if (reportDate === 'newest') {
-      switch (respondDate) {
-        case 'newest':
-          newOrder = ['createdAt DESC', 'updatedAt DESC']
-          break
-
-        case 'oldest':
-          newOrder = ['createdAt DESC', 'updatedAt ASC']
-          break
-
-        default:
-          newOrder = ['createdAt DESC', 'updatedAt DESC']
-      }
+    
+    if (!reportDate || !respondDate) {
+      newOrder = ['updatedAt DESC']
     }
 
+    if (reportDate === 'newest') {
+      newOrder = ['createdAt DESC']
+    } 
+    
     if (reportDate === 'oldest') {
-      switch (respondDate) {
-        case 'newest':
-          newOrder = ['createdAt ASC', 'updatedAt DESC']
-          break
+      newOrder = ['createdAt ASC']
+    }
 
-        case 'oldest':
-          newOrder = ['createdAt ASC', 'updatedAt ASC']
-          break
-
-        default:
-          newOrder = ['createdAt ASC', 'updatedAt DESC']
-      }
+    if (respondDate === 'newest') {
+      newOrder = ['updatedAt DESC']
+    } 
+    
+    if (respondDate === 'oldest') {
+      newOrder = ['updatedAt ASC']
     }
 
     try {
@@ -121,8 +111,8 @@ export const fetchAllResponded = (
           allRespondedUser: {
             ...data,
             filter: {
-              reportDate: reportDate ?? 'all',
-              respondDate: respondDate ?? 'all',
+              reportDate: reportDate ?? 'newest',
+              respondDate: respondDate ?? 'newest',
               status: status === '' ? 'all' : status,
             },
           },
@@ -133,8 +123,8 @@ export const fetchAllResponded = (
           allRespondedPost: {
             ...data,
             filter: {
-              reportDate: reportDate ?? 'all',
-              respondDate: respondDate ?? 'all',
+              reportDate: reportDate ?? 'newest',
+              respondDate: respondDate ?? 'newest',
               status: status === '' ? 'all' : status,
               postType: postType === '' ? 'all' : postType,
             },

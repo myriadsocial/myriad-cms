@@ -53,7 +53,6 @@ export interface ReportWithPaginationData {
   filter: {
     reportDate: string
     category?: string
-    penaltyStatus?: string
     respondDate?: string
     status?: string
     postType?: string

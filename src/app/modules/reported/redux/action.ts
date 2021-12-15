@@ -104,7 +104,7 @@ export const fetchAllReported = (
           allReportedUser: {
             ...data,
             filter: {
-              reportDate: reportDate ?? 'all',
+              reportDate: reportDate ?? 'newest',
               category: category === '' ? 'all' : category,
             },
           },
@@ -115,7 +115,7 @@ export const fetchAllReported = (
           allReportedPost: {
             ...data,
             filter: {
-              reportDate: reportDate ?? 'all',
+              reportDate: reportDate ?? 'newest',
               category: category === '' ? 'all' : category,
               postType: postType === '' ? 'all' : postType,
             },

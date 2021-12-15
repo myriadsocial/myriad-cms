@@ -20,7 +20,6 @@ const initialData = {
   filter: {
     reportDate: 'newest',
     respondDate: 'newest',
-    penaltyStatus: 'all',
     postType: 'all',
     status: 'all',
   },
