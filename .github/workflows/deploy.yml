@@ -89,9 +89,9 @@ jobs:
           key: ${{ steps.secrets.outputs.SSH_KEY }}
           port: ${{ steps.secrets.outputs.SSH_PORT }}
           script: |
-            helm repo add myriad https://charts.myriad.systems
+            helm repo add myriadsocial https://charts.myriad.social
             helm repo update
-            helm upgrade myriad-cms myriad/myriad-cms \
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
@@ -182,9 +182,9 @@ jobs:
           key: ${{ steps.secrets.outputs.SSH_KEY }}
           port: ${{ steps.secrets.outputs.SSH_PORT }}
           script: |
-            helm repo add myriad https://charts.myriad.systems
+            helm repo add myriadsocial https://charts.myriad.social
             helm repo update
-            helm upgrade myriad-cms myriad/myriad-cms \
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string image.pullPolicy=Always \
@@ -278,9 +278,9 @@ jobs:
           key: ${{ steps.secrets.outputs.SSH_KEY }}
           port: ${{ steps.secrets.outputs.SSH_PORT }}
           script: |
-            helm repo add myriad https://charts.myriad.systems
+            helm repo add myriadsocial https://charts.myriad.social
             helm repo update
-            helm upgrade myriad-cms myriad/myriad-cms \
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
@@ -371,9 +371,9 @@ jobs:
           key: ${{ steps.secrets.outputs.SSH_KEY }}
           port: ${{ steps.secrets.outputs.SSH_PORT }}
           script: |
-            helm repo add myriad https://charts.myriad.systems
+            helm repo add myriadsocial https://charts.myriad.social
             helm repo update
-            helm upgrade myriad-cms myriad/myriad-cms \
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
@@ -464,9 +464,9 @@ jobs:
           key: ${{ steps.secrets.outputs.SSH_KEY }}
           port: ${{ steps.secrets.outputs.SSH_PORT }}
           script: |
-            helm repo add myriad https://charts.myriad.systems
+            helm repo add myriadsocial https://charts.myriad.social
             helm repo update
-            helm upgrade myriad-cms myriad/myriad-cms \
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
