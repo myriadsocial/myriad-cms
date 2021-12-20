@@ -93,7 +93,7 @@ jobs:
             helm repo update
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
-              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
               --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
               --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
@@ -122,10 +122,7 @@ jobs:
               --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=100
+              --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
   deploy-alpha-release:
@@ -217,10 +214,7 @@ jobs:
               --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=100
+              --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
   deploy-beta-release:
@@ -309,10 +303,7 @@ jobs:
               --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=100
+              --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
   deploy-pre-release:
@@ -401,10 +392,7 @@ jobs:
               --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=100
+              --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
   deploy-release:
@@ -493,8 +481,5 @@ jobs:
               --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=100
+              --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
