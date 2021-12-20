@@ -18,14 +18,14 @@ type Props = {
 
 const ReportedTable: React.FC<Props> = (props) => {
   const {
-    tableType, 
-    type, 
-    data, 
-    tableHeader, 
-    changedReportDate, 
-    changedCategory, 
+    tableType,
+    type,
+    data,
+    tableHeader,
+    changedReportDate,
+    changedCategory,
     changedPostType,
-    loading
+    loading,
   } = props
 
   return (

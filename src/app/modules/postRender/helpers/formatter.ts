@@ -3,8 +3,8 @@ import {
   ELEMENT_MENTION,
   ELEMENT_MEDIA_EMBED,
   ELEMENT_IMAGE,
-  ELEMENT_IMAGE_LIST, 
-  ELEMENT_SHOW_MORE, 
+  ELEMENT_IMAGE_LIST,
+  ELEMENT_SHOW_MORE,
   ELEMENT_HASHTAG,
 } from '../render'
 import {TNode} from '@udecode/plate-core'

@@ -49,14 +49,23 @@ const TablePage: React.FC<Props> = (props) => {
   )
 
   const {
-    filter: {reportDate: reportedReportDatePost, category: categoryPost, postType: postTypeReported},
+    filter: {
+      reportDate: reportedReportDatePost,
+      category: categoryPost,
+      postType: postTypeReported,
+    },
   } = reportedPost
   const {
     filter: {reportDate: reportedReportDateUser},
   } = reportedUser
 
   const {
-    filter: {reportDate: respondedReportDatePost, respondDate: respondDatePost, status: postStatus, postType: postTypeResponded},
+    filter: {
+      reportDate: respondedReportDatePost,
+      respondDate: respondDatePost,
+      status: postStatus,
+      postType: postTypeResponded,
+    },
   } = respondedPost
   const {
     filter: {reportDate: respondedReportDateUser, respondDate: respondDateUser, status: userStatus},
@@ -120,8 +129,12 @@ const TablePage: React.FC<Props> = (props) => {
           <div className='col'></div>
           <div className='col'></div>
           <div className='mb-3 col pt-3'>
-            <InputGroup >
-              <FormControl placeholder='Search' aria-label='Search' aria-describedby='basic-addon2' />
+            <InputGroup>
+              <FormControl
+                placeholder='Search'
+                aria-label='Search'
+                aria-describedby='basic-addon2'
+              />
               <InputGroup.Text style={{cursor: 'pointer'}}>
                 <i className='fas fa-search'></i>
               </InputGroup.Text>
@@ -163,10 +176,10 @@ const TablePage: React.FC<Props> = (props) => {
                     <i className='fas fa-filter'></i>
                   </InputGroup.Text>
                   <Form.Select value={postTypeReported} onChange={onChangedPostType}>
-                  <option disabled>Post Type</option>
-                  <option value='all'>All</option>
-                  <option value='post'>Post</option>
-                  <option value='comment'>Comment</option>
+                    <option disabled>Post Type</option>
+                    <option value='all'>All</option>
+                    <option value='post'>Post</option>
+                    <option value='comment'>Comment</option>
                   </Form.Select>
                 </InputGroup>
               </>
@@ -212,10 +225,7 @@ const TablePage: React.FC<Props> = (props) => {
                 <InputGroup.Text>
                   <i className='fas fa-search'></i>
                 </InputGroup.Text>
-                <Form.Select
-                  value={postTypeResponded}
-                  onChange={onChangedPostType}
-                >
+                <Form.Select value={postTypeResponded} onChange={onChangedPostType}>
                   <option disabled>Post Type</option>
                   <option value='all'>All</option>
                   <option value='post'>Post</option>
@@ -244,26 +254,24 @@ const TablePage: React.FC<Props> = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {
-                  loading ? (
-                    <tr>
-                      <td>
-                        <div>Please wait...</div>
-                      </td>
-                    </tr>
-                  ) : (
-                    data.data.map((reported) => {
-                      return (
-                        <TableContent
-                          key={reported.id}
-                          tableType={tableType}
-                          data={reported}
-                          type={type}
-                        />
-                      )
-                    })
-                  )
-                }
+                {loading ? (
+                  <tr>
+                    <td>
+                      <div>Please wait...</div>
+                    </td>
+                  </tr>
+                ) : (
+                  data.data.map((reported) => {
+                    return (
+                      <TableContent
+                        key={reported.id}
+                        tableType={tableType}
+                        data={reported}
+                        type={type}
+                      />
+                    )
+                  })
+                )}
               </tbody>
             </table>
           </div>

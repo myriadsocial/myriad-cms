@@ -8,8 +8,8 @@ import {fetchAllReporters} from '../../../reporters/redux/action'
 import {ReportActionModal} from '../../../reporters'
 import {usePostReportList, useDefaultProfileImageUrl, usePostStatusList} from '../../../../data/'
 import {PostRender, ShowMore} from '../../../postRender'
-import remarkGFM from 'remark-gfm';
-import remarkHTML from 'remark-html';
+import remarkGFM from 'remark-gfm'
+import remarkHTML from 'remark-html'
 
 type Props = {
   tableType: TableType
@@ -106,7 +106,8 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
 
   const reportedInfo = () => {
     if (type === ReportType.USER) {
-      const userReportedInfo = 'Join date ' +
+      const userReportedInfo =
+        'Join date ' +
         new Date(data.reportedDetail ? data.reportedDetail.user.createdAt : '').toLocaleDateString(
           'en-GB'
         )
@@ -119,18 +120,18 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
     }
 
     if (data.reportedDetail.platform === 'reddit') {
-      const postText = data.reportedDetail.text ?? '';
+      const postText = data.reportedDetail.text ?? ''
       return (
         <>
           <ReactMarkdown skipHtml remarkPlugins={[remarkGFM, remarkHTML]}>
             {postText.slice(0, maxLength)}
           </ReactMarkdown>
 
-          {
-            !!maxLength && postText.length > maxLength ? (
-              <ShowMore onClick={() => setMaxLength(undefined)}/>
-            ) : <></>
-          }
+          {!!maxLength && postText.length > maxLength ? (
+            <ShowMore onClick={() => setMaxLength(undefined)} />
+          ) : (
+            <></>
+          )}
         </>
       )
     }
@@ -141,9 +142,9 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
 
     return (
       <PostRender
-        postText={reportedDetail} 
-        max={maxLength} 
-        onShowAll={() => setMaxLength(undefined)} 
+        postText={reportedDetail}
+        max={maxLength}
+        onShowAll={() => setMaxLength(undefined)}
         onShowLess={() => setMaxLength(250)}
       />
     )
@@ -178,9 +179,7 @@ const TableContent: React.FC<Props> = ({tableType, data, type}) => {
               <span className='text-dark fw-bolder text-hover-primary mb-1 fs-6'>
                 {reportedName}
               </span>
-              <span className='text-muted fw-bold text-muted d-block fs-7'>
-                {reportedInfo()}
-              </span>
+              <span className='text-muted fw-bold text-muted d-block fs-7'>{reportedInfo()}</span>
             </div>
           </div>
         </td>

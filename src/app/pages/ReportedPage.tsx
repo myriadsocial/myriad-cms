@@ -34,7 +34,7 @@ const ReportedPage: React.FC<Props> = ({type}) => {
     setPageNumber(number)
     history.push({
       pathname: '/posts/reported',
-      search: '?page=' + number
+      search: '?page=' + number,
     })
   }
   const changedReportDate = (date: string) => setReportDate(date)
@@ -44,21 +44,8 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const data = type === ReportType.POST ? reportedPost : reportedUser
 
   useLayoutEffect(() => {
-    dispatch(fetchAllReported(
-      pageNumber, 
-      type, 
-      reportDate, 
-      category, 
-      postType
-    ))
-  }, [
-    pageNumber, 
-    type, 
-    dispatch, 
-    reportDate, 
-    category, 
-    postType
-  ])
+    dispatch(fetchAllReported(pageNumber, type, reportDate, category, postType))
+  }, [pageNumber, type, dispatch, reportDate, category, postType])
 
   const tableHeader = type === ReportType.POST ? reportedPostTHeader : reportedUserTHeader
 

@@ -20,7 +20,7 @@ const initialData = {
   filter: {
     reportDate: 'newest',
     category: 'all',
-    postType: 'all'
+    postType: 'all',
   },
 }
 

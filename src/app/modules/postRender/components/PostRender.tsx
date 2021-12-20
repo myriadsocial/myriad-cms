@@ -11,8 +11,8 @@ import {
   ELEMENT_HASHTAG,
   ELEMENT_SHOW_MORE,
   ELEMENT_SHOW_LESS,
-  ELEMENT_UL, 
-  ELEMENT_OL, 
+  ELEMENT_UL,
+  ELEMENT_OL,
   ELEMENT_LIC,
   ELEMENT_LINK,
   ELEMENT_ALIGN_CENTER,
@@ -25,7 +25,7 @@ import escapeHTML from 'escape-html'
 import React, {useCallback, useState} from 'react'
 import {deserialize, formatToString} from '../helpers/formatter'
 import {ShowMore, ShowLess, Gallery} from './'
-import { Video } from '..'
+import {Video} from '..'
 
 type Props = {
   postText: string
@@ -36,7 +36,7 @@ type Props = {
 
 export const PostRender: React.FC<Props> = (props) => {
   const {postText, max, onShowAll, onShowLess} = props
-  let [maxLength, setMaxLength] = useState<number | undefined>(undefined);
+  let [maxLength, setMaxLength] = useState<number | undefined>(undefined)
   let nodes = deserialize(postText)
 
   const originText = nodes.map(formatToString).join('')
@@ -44,7 +44,7 @@ export const PostRender: React.FC<Props> = (props) => {
 
   if (max && originText.length > max) {
     nodes = deserialize(postText, max)
-    nodes = nodes.filter(node => node.type !== ELEMENT_SHOW_LESS)
+    nodes = nodes.filter((node) => node.type !== ELEMENT_SHOW_LESS)
     showMore = true
   }
 
@@ -84,12 +84,12 @@ export const PostRender: React.FC<Props> = (props) => {
     return render
   }
 
-  let count = 0;
+  let count = 0
 
   const renderElement = useCallback(
     (node, images: string[] = []) => {
       const onShowAllText = () => {
-        setMaxLength(max);
+        setMaxLength(max)
         onShowAll()
       }
 
@@ -108,8 +108,8 @@ export const PostRender: React.FC<Props> = (props) => {
         count++
 
         return (
-          <span  
-            key={count}          
+          <span
+            key={count}
             style={{
               fontWeight: node.bold ? 600 : 400,
               fontStyle: node.italic ? 'italic' : 'none',
@@ -163,16 +163,32 @@ export const PostRender: React.FC<Props> = (props) => {
           return <h6 key={count}>{children}</h6>
 
         case ELEMENT_ALIGN_CENTER:
-          return <div key={count} style={{textAlign: 'center'}}>{children}</div>
+          return (
+            <div key={count} style={{textAlign: 'center'}}>
+              {children}
+            </div>
+          )
 
         case ELEMENT_ALIGN_RIGHT:
-          return <div key={count} style={{textAlign: 'right'}}>{children}</div>
+          return (
+            <div key={count} style={{textAlign: 'right'}}>
+              {children}
+            </div>
+          )
 
         case ELEMENT_ALIGN_LEFT:
-          return <div key={count} style={{textAlign: 'left'}}>{children}</div>
+          return (
+            <div key={count} style={{textAlign: 'left'}}>
+              {children}
+            </div>
+          )
 
         case ELEMENT_ALIGN_JUSTIFY:
-          return <div key={count} style={{textAlign: 'justify'}}>{children}</div>
+          return (
+            <div key={count} style={{textAlign: 'justify'}}>
+              {children}
+            </div>
+          )
 
         case ELEMENT_UL:
           return <ul key={count}>{children}</ul>
@@ -184,38 +200,45 @@ export const PostRender: React.FC<Props> = (props) => {
           return <li key={count}>{children}</li>
 
         case ELEMENT_IMAGE:
-          return <Gallery key={count} images={images}/>
+          return <Gallery key={count} images={images} />
 
         case ELEMENT_MEDIA_EMBED:
-          return <Video key={count} url={node.url}/>
+          return <Video key={count} url={node.url} />
 
         case ELEMENT_LINK:
-          return <a key={count} href={escapeHTML(node.url)}>{children}</a>
+          return (
+            <a key={count} href={escapeHTML(node.url)}>
+              {children}
+            </a>
+          )
 
-				case ELEMENT_HASHTAG:
-					return (
-						<a key={count} href={`${process.env.REACT_APP_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}>
-							<span                
-								style={{
-									cursor: 'pointer',
-									fontWeight: 600,
-									color: "#7342CC",
-									display: 'inline-block'
-								}}
-							>
-								#{node.hashtag}
-							</span>
-						</a>
-					)
+        case ELEMENT_HASHTAG:
+          return (
+            <a
+              key={count}
+              href={`${process.env.REACT_APP_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}
+            >
+              <span
+                style={{
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  color: '#7342CC',
+                  display: 'inline-block',
+                }}
+              >
+                #{node.hashtag}
+              </span>
+            </a>
+          )
 
-				case ELEMENT_SHOW_MORE:
-					return <ShowMore key={ELEMENT_SHOW_MORE} onClick={onShowAllText} />
+        case ELEMENT_SHOW_MORE:
+          return <ShowMore key={ELEMENT_SHOW_MORE} onClick={onShowAllText} />
 
         case ELEMENT_SHOW_LESS:
-          return <ShowLess key={ELEMENT_SHOW_LESS} onClick={onShowLess}/>
+          return <ShowLess key={ELEMENT_SHOW_LESS} onClick={onShowLess} />
 
-				default:
-					return children;
+        default:
+          return children
       }
     },
     [showMore, onShowLess, onShowAll, max, count]

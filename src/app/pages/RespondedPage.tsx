@@ -35,23 +35,8 @@ const ReportedPage: React.FC<Props> = ({type}) => {
   const changedPostType = (postType: string) => setPostType(postType)
 
   useEffect(() => {
-    dispatch(fetchAllResponded(
-      pageNumber, 
-      type, 
-      reportDate, 
-      respondDate, 
-      reportStatus, 
-      postType))
-  }, [
-    pageNumber, 
-    type, 
-    dispatch, 
-    reportDate, 
-    respondDate, 
-    penalty, 
-    reportStatus, 
-    postType
-  ])
+    dispatch(fetchAllResponded(pageNumber, type, reportDate, respondDate, reportStatus, postType))
+  }, [pageNumber, type, dispatch, reportDate, respondDate, penalty, reportStatus, postType])
 
   const data = type === ReportType.POST ? respondedPost : respondedUser
   const tableHeader = type === ReportType.POST ? respondedPostTHeader : deletedUserTHeader
