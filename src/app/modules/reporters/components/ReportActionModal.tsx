@@ -10,6 +10,9 @@ import {RootState} from '../../../../setup'
 import {ReporterState} from '../../reporters/redux/reducer'
 import {useDefaultProfileImageUrl} from '../../../data'
 import {Modal} from 'react-bootstrap-v5'
+import {config} from '../../../../config'
+
+const {MYRIAD_WEB_URL, MYRIAD_API_URL} = config;
 
 type Props = {
   showRespond: boolean
@@ -38,46 +41,19 @@ const ReportActionModal: React.FC<Props> = ({
   const openConfirmation = () => setShowModal(true)
 
   const ignoreReport = async () => {
-    dispatch(updateAllReported(reportId, type))
-    return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        status: ReportStatusType.IGNORED,
-        updatedAt: new Date(),
-      }),
-    })
+    dispatch(updateAllReported(reportId, type, ReportStatusType.IGNORED))
   }
 
   const removedReport = async () => {
     setShowModal(false)
     onHideRespond()
-    dispatch(updateAllReported(reportId, type))
-    return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        status: ReportStatusType.REMOVED,
-        updatedAt: new Date(),
-      }),
-    })
+    dispatch(updateAllReported(reportId, type, ReportStatusType.REMOVED))
   }
 
   const activate = async () => {
-    console.log('hello')
     setShowModal(false)
     onHideRespond()
     dispatch(updateAllResponded(reportId, type))
-    return await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}`, {
-      method: 'DELETE',
-      mode: 'cors',
-    })
   }
 
   const onHide = () => {
@@ -147,13 +123,13 @@ const ReportActionModal: React.FC<Props> = ({
               <a
                 href={
                   referenceType === ReportType.COMMENT
-                    ? `${process.env.REACT_APP_API_URL}/${
+                    ? `${MYRIAD_API_URL}/${
                         referenceType + 's'
                       }/${referenceId}/posts?filter=${JSON.stringify(filter)}`
-                    : `${process.env.REACT_APP_WEB_URL}/${referenceType}/${referenceId}`
+                    : `${MYRIAD_WEB_URL}/${referenceType}/${referenceId}`
                 }
               >
-                {process.env.REACT_APP_WEB_URL}/{referenceType}/{referenceId}
+                {process.env.REACT_APP_MYRIAD_WEB_URL}/{referenceType}/{referenceId}
               </a>
             </div>
           </div>

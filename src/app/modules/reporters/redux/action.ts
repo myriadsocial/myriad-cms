@@ -1,6 +1,9 @@
 import * as constants from './constants'
 import {ReporterWithPaginationData} from '../../../interfaces'
 import {ReportType} from '../../../enums'
+import {config} from '../../../../config'
+
+const {MYRIAD_API_URL, MYRIAD_API_KEY} = config;
 
 export interface LoadReporters {
   type: constants.FETCH_REPORTERS_TYPE
@@ -25,7 +28,13 @@ export const fetchAllReporters = (reportId: string, type?: ReportType, reference
         type: constants.LOADING,
       })
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/reports/${reportId}/users`)
+      const url = `${MYRIAD_API_URL}/reports/${reportId}/users`
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${MYRIAD_API_KEY}`,
+        },
+      })
       const data = await response.json()
 
       dispatch({

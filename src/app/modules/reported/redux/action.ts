@@ -1,6 +1,9 @@
 import {ReportStatusType, ReportType} from '../../../enums'
 import {ReportWithPaginationData} from '../../../interfaces/report.interface'
 import * as constants from './constant'
+import {config} from '../../../../config'
+
+const {MYRIAD_API_URL, MYRIAD_API_KEY} = config;
 
 export interface LoadAllReportedPost {
   type: constants.FETCH_ALL_REPORTED_POST_TYPE
@@ -61,40 +64,51 @@ export const fetchAllReported = (
 
     switch (reportDate) {
       case 'newest':
-        newOrder = ['createdAt DESC'];
-        break;
+        newOrder = ['createdAt DESC']
+        break
 
-      case 'oldest': 
-        newOrder = ['createdAt ASC'];
-        break;
+      case 'oldest':
+        newOrder = ['createdAt ASC']
+        break
 
       default:
-        newOrder = ['createdAt DESC'];
+        newOrder = ['createdAt DESC']
     }
 
     try {
-      const filter = {
+      const filter = JSON.stringify({
         where: {
           status: ReportStatusType.PENDING,
-          type: type === ReportType.USER ? undefined : (
-            category === '' || category === 'all' ? undefined : category
-          ),
-          referenceType: type === ReportType.USER ? ReportType.USER : (
-            postType === '' || postType === 'all' ? {
-              inq: [ReportType.POST, ReportType.COMMENT]
-            } : postType
-          ),
+          type:
+            type === ReportType.USER
+              ? undefined
+              : category === '' || category === 'all'
+              ? undefined
+              : category,
+          referenceType:
+            type === ReportType.USER
+              ? ReportType.USER
+              : postType === '' || postType === 'all'
+              ? {
+                  inq: [ReportType.POST, ReportType.COMMENT],
+                }
+              : postType,
         },
         order: newOrder,
-      }
+      })
+
+      const url = `${MYRIAD_API_URL}/reports?pageNumber=${pageNumber}&filter=${filter}`
 
       //TODO: Moved to env
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/reports?pageNumber=${pageNumber}&filter=${JSON.stringify(
-          filter
-        )}`
-      )
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${MYRIAD_API_KEY}`,
+        },
+      })
+      
       const data = await response.json()
+ 
 
       let payload = null
 
@@ -132,46 +146,27 @@ export const fetchAllReported = (
   }
 }
 
-export const updateAllReported = (reportId: string, type: ReportType) => {
+export const updateAllReported = (reportId: string, type: ReportType, status: ReportStatusType) => {
   return async (dispatch: any) => {
-    dispatch({
-      type: constants.LOADING,
-    })
-
     try {
       let payload = null
+
+      const url = `${MYRIAD_API_URL}/reports/${reportId}`
+
+      await fetch(url, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${MYRIAD_API_KEY}`,
+        },
+        body: JSON.stringify({
+          status: status,
+          updatedAt: new Date(),
+        }),
+      })
 
       if (type === ReportType.POST || type === ReportType.COMMENT) {
-        payload = {
-          type: constants.UPDATE_ALL_REPORTED_POST,
-          reportId: reportId,
-        }
-      } else {
-        payload = {
-          type: constants.UPDATE_ALL_REPORTED_USER,
-          reportId: reportId,
-        }
-      }
-
-      dispatch(payload)
-    } catch (err) {
-      dispatch({
-        type: constants.ERROR,
-      })
-    }
-  }
-}
-
-export const filterAllReported = (reportId: string, type: ReportType) => {
-  return async (dispatch: any) => {
-    dispatch({
-      type: constants.LOADING,
-    })
-
-    try {
-      let payload = null
-
-      if (type === ReportType.POST) {
         payload = {
           type: constants.UPDATE_ALL_REPORTED_POST,
           reportId: reportId,

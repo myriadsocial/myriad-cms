@@ -26,6 +26,9 @@ import React, {useCallback, useState} from 'react'
 import {deserialize, formatToString} from '../helpers/formatter'
 import {ShowMore, ShowLess, Gallery} from './'
 import {Video} from '..'
+import {config} from '../../../../config'
+
+const {MYRIAD_WEB_URL} = config;
 
 type Props = {
   postText: string
@@ -216,7 +219,7 @@ export const PostRender: React.FC<Props> = (props) => {
           return (
             <a
               key={count}
-              href={`${process.env.REACT_APP_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}
+              href={`${MYRIAD_WEB_URL}/topic/hashtag?tag=${node.hashtag}`}
             >
               <span
                 style={{
