@@ -61,20 +61,13 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/HOST
             PORT:${{ secrets.DEV_GCP_PROJECT_ID }}/PORT
-            REACT_APP_BASE_LAYOUT_CONFIG_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_BASE_LAYOUT_CONFIG_KEY
-            REACT_APP_API_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_API_URL
-            REACT_APP_WEB_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_WEB_URL
-            REACT_APP_VERSION:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_VERSION
-            REACT_APP_THEME_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_THEME_NAME
-            REACT_APP_THEME_DEMO:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_THEME_DEMO
-            REACT_APP_BOOTSTRAP_DOCS_LINK:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_BOOTSTRAP_DOCS_LINK
-            REACT_APP_SASS_PATH:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_SASS_PATH
-            REACT_APP_SASS_VARIABLES_PATH:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_SASS_VARIABLES_PATH
-            REACT_APP_PURCHASE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_PURCHASE_URL
-            REACT_APP_PREVIEW_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_URL
-            REACT_APP_PREVIEW_REACT_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_REACT_URL
-            REACT_APP_PREVIEW_DOCS_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_DOCS_URL
+            WEB_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/API_KEY
+            WEBSITE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUPPORT_MAIL
             DNS_CMS:${{ secrets.DEV_GCP_PROJECT_ID }}/DNS_CMS
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -94,20 +87,13 @@ jobs:
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
+              --set-string config.host=${{ steps.secrets.outputs.HOST }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
-              --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
-              --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
-              --set-string config.appWebUrl=${{ steps.secrets.outputs.REACT_APP_WEB_URL }} \
-              --set-string config.appVersion=${{ steps.secrets.outputs.REACT_APP_VERSION }} \
-              --set-string config.appThemeName=${{ steps.secrets.outputs.REACT_APP_THEME_NAME }} \
-              --set-string config.appThemeDemo=${{ steps.secrets.outputs.REACT_APP_THEME_DEMO }} \
-              --set-string config.appBootstrapDocsLink=${{ steps.secrets.outputs.REACT_APP_BOOTSTRAP_DOCS_LINK }} \
-              --set-string config.appSassPath=${{ steps.secrets.outputs.REACT_APP_SASS_PATH }} \
-              --set-string config.appSassVariablePath=${{ steps.secrets.outputs.REACT_APP_SASS_VARIABLES_PATH }} \
-              --set-string config.appPurchaseUrl=${{ steps.secrets.outputs.REACT_APP_PURCHASE_URL }} \
-              --set-string config.appPreviewUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_URL }} \
-              --set-string config.appPreviewReactUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_REACT_URL }}\
-              --set-string config.appPreviewDocsUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_DOCS_URL }} \
+              --set-string config.webUrl=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiUrl=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.websiteUrl=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -120,9 +106,9 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=300m \
               --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1
             kubectl rollout status deployment/myriad-cms
 
   deploy-alpha-release:
@@ -150,20 +136,13 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            HOST:${{ secrets.STG_GCP_PROJECT_ID }}/HOST
             PORT:${{ secrets.STG_GCP_PROJECT_ID }}/PORT
-            REACT_APP_BASE_LAYOUT_CONFIG_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_BASE_LAYOUT_CONFIG_KEY
-            REACT_APP_API_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_API_URL
-            REACT_APP_WEB_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_WEB_URL
-            REACT_APP_VERSION:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_VERSION
-            REACT_APP_THEME_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_THEME_NAME
-            REACT_APP_THEME_DEMO:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_THEME_DEMO
-            REACT_APP_BOOTSTRAP_DOCS_LINK:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_BOOTSTRAP_DOCS_LINK
-            REACT_APP_SASS_PATH:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_SASS_PATH
-            REACT_APP_SASS_VARIABLES_PATH:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_SASS_VARIABLES_PATH
-            REACT_APP_PURCHASE_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_PURCHASE_URL
-            REACT_APP_PREVIEW_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_URL
-            REACT_APP_PREVIEW_REACT_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_REACT_URL
-            REACT_APP_PREVIEW_DOCS_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_DOCS_URL
+            WEB_URL:${{ secrets.STG_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.STG_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/API_KEY
+            WEBSITE_URL:${{ secrets.STG_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.STG_GCP_PROJECT_ID }}/SUPPORT_MAIL
             DNS_CMS:${{ secrets.STG_GCP_PROJECT_ID }}/DNS_CMS
             SSH_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -183,23 +162,13 @@ jobs:
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
-              --set-string image.pullPolicy=Always \
-              --set-string config.appName="Myriad Staging" \
-              --set-string config.nextAuthURL=https://app.stg.myriad.systems \
+              --set-string config.host=${{ steps.secrets.outputs.HOST }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
-              --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
-              --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
-              --set-string config.appWebUrl=${{ steps.secrets.outputs.REACT_APP_WEB_URL }} \
-              --set-string config.appVersion=${{ steps.secrets.outputs.REACT_APP_VERSION }} \
-              --set-string config.appThemeName=${{ steps.secrets.outputs.REACT_APP_THEME_NAME }} \
-              --set-string config.appThemeDemo=${{ steps.secrets.outputs.REACT_APP_THEME_DEMO }} \
-              --set-string config.appBootstrapDocsLink=${{ steps.secrets.outputs.REACT_APP_BOOTSTRAP_DOCS_LINK }} \
-              --set-string config.appSassPath=${{ steps.secrets.outputs.REACT_APP_SASS_PATH }} \
-              --set-string config.appSassVariablePath=${{ steps.secrets.outputs.REACT_APP_SASS_VARIABLES_PATH }} \
-              --set-string config.appPurchaseUrl=${{ steps.secrets.outputs.REACT_APP_PURCHASE_URL }} \
-              --set-string config.appPreviewUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_URL }} \
-              --set-string config.appPreviewReactUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_REACT_URL }}\
-              --set-string config.appPreviewDocsUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_DOCS_URL }} \
+              --set-string config.webUrl=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiUrl=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.websiteUrl=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -212,9 +181,9 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=300m \
               --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1
             kubectl rollout status deployment/myriad-cms
 
   deploy-beta-release:
@@ -242,20 +211,13 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/HOST
             PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PORT
-            REACT_APP_BASE_LAYOUT_CONFIG_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_BASE_LAYOUT_CONFIG_KEY
-            REACT_APP_API_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_API_URL
-            REACT_APP_WEB_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_WEB_URL
-            REACT_APP_VERSION:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_VERSION
-            REACT_APP_THEME_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_THEME_NAME
-            REACT_APP_THEME_DEMO:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_THEME_DEMO
-            REACT_APP_BOOTSTRAP_DOCS_LINK:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_BOOTSTRAP_DOCS_LINK
-            REACT_APP_SASS_PATH:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_SASS_PATH
-            REACT_APP_SASS_VARIABLES_PATH:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_SASS_VARIABLES_PATH
-            REACT_APP_PURCHASE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_PURCHASE_URL
-            REACT_APP_PREVIEW_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_URL
-            REACT_APP_PREVIEW_REACT_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_REACT_URL
-            REACT_APP_PREVIEW_DOCS_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_DOCS_URL
+            WEB_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_KEY
+            WEBSITE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUPPORT_MAIL
             DNS_CMS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DNS_CMS
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -275,20 +237,13 @@ jobs:
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.host=${{ steps.secrets.outputs.HOST }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
-              --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
-              --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
-              --set-string config.appWebUrl=${{ steps.secrets.outputs.REACT_APP_WEB_URL }} \
-              --set-string config.appVersion=${{ steps.secrets.outputs.REACT_APP_VERSION }} \
-              --set-string config.appThemeName=${{ steps.secrets.outputs.REACT_APP_THEME_NAME }} \
-              --set-string config.appThemeDemo=${{ steps.secrets.outputs.REACT_APP_THEME_DEMO }} \
-              --set-string config.appBootstrapDocsLink=${{ steps.secrets.outputs.REACT_APP_BOOTSTRAP_DOCS_LINK }} \
-              --set-string config.appSassPath=${{ steps.secrets.outputs.REACT_APP_SASS_PATH }} \
-              --set-string config.appSassVariablePath=${{ steps.secrets.outputs.REACT_APP_SASS_VARIABLES_PATH }} \
-              --set-string config.appPurchaseUrl=${{ steps.secrets.outputs.REACT_APP_PURCHASE_URL }} \
-              --set-string config.appPreviewUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_URL }} \
-              --set-string config.appPreviewReactUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_REACT_URL }}\
-              --set-string config.appPreviewDocsUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_DOCS_URL }} \
+              --set-string config.webUrl=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiUrl=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.websiteUrl=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -301,8 +256,8 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=300m \
               --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=1024Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
               --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
@@ -331,20 +286,13 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/HOST
             PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PORT
-            REACT_APP_BASE_LAYOUT_CONFIG_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_BASE_LAYOUT_CONFIG_KEY
-            REACT_APP_API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_API_URL
-            REACT_APP_WEB_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_WEB_URL
-            REACT_APP_VERSION:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_VERSION
-            REACT_APP_THEME_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_THEME_NAME
-            REACT_APP_THEME_DEMO:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_THEME_DEMO
-            REACT_APP_BOOTSTRAP_DOCS_LINK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_BOOTSTRAP_DOCS_LINK
-            REACT_APP_SASS_PATH:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_SASS_PATH
-            REACT_APP_SASS_VARIABLES_PATH:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_SASS_VARIABLES_PATH
-            REACT_APP_PURCHASE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PURCHASE_URL
-            REACT_APP_PREVIEW_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_URL
-            REACT_APP_PREVIEW_REACT_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_REACT_URL
-            REACT_APP_PREVIEW_DOCS_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_DOCS_URL
+            WEB_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_KEY
+            WEBSITE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUPPORT_MAIL
             DNS_CMS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/DNS_CMS
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -364,20 +312,13 @@ jobs:
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.host=${{ steps.secrets.outputs.HOST }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
-              --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
-              --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
-              --set-string config.appWebUrl=${{ steps.secrets.outputs.REACT_APP_WEB_URL }} \
-              --set-string config.appVersion=${{ steps.secrets.outputs.REACT_APP_VERSION }} \
-              --set-string config.appThemeName=${{ steps.secrets.outputs.REACT_APP_THEME_NAME }} \
-              --set-string config.appThemeDemo=${{ steps.secrets.outputs.REACT_APP_THEME_DEMO }} \
-              --set-string config.appBootstrapDocsLink=${{ steps.secrets.outputs.REACT_APP_BOOTSTRAP_DOCS_LINK }} \
-              --set-string config.appSassPath=${{ steps.secrets.outputs.REACT_APP_SASS_PATH }} \
-              --set-string config.appSassVariablePath=${{ steps.secrets.outputs.REACT_APP_SASS_VARIABLES_PATH }} \
-              --set-string config.appPurchaseUrl=${{ steps.secrets.outputs.REACT_APP_PURCHASE_URL }} \
-              --set-string config.appPreviewUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_URL }} \
-              --set-string config.appPreviewReactUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_REACT_URL }}\
-              --set-string config.appPreviewDocsUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_DOCS_URL }} \
+              --set-string config.webUrl=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiUrl=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.websiteUrl=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -390,8 +331,8 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=300m \
               --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=1024Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
               --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
 
@@ -420,20 +361,13 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/HOST
             PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PORT
-            REACT_APP_BASE_LAYOUT_CONFIG_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_BASE_LAYOUT_CONFIG_KEY
-            REACT_APP_API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_API_URL
-            REACT_APP_WEB_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_WEB_URL
-            REACT_APP_VERSION:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_VERSION
-            REACT_APP_THEME_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_THEME_NAME
-            REACT_APP_THEME_DEMO:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_THEME_DEMO
-            REACT_APP_BOOTSTRAP_DOCS_LINK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_BOOTSTRAP_DOCS_LINK
-            REACT_APP_SASS_PATH:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_SASS_PATH
-            REACT_APP_SASS_VARIABLES_PATH:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_SASS_VARIABLES_PATH
-            REACT_APP_PURCHASE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PURCHASE_URL
-            REACT_APP_PREVIEW_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_URL
-            REACT_APP_PREVIEW_REACT_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_REACT_URL
-            REACT_APP_PREVIEW_DOCS_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REACT_APP_PREVIEW_DOCS_URL
+            WEB_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_KEY
+            WEBSITE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUPPORT_MAIL
             DNS_CMS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/DNS_CMS
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -453,20 +387,13 @@ jobs:
             helm upgrade myriad-cms myriadsocial/myriad-cms \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.host=${{ steps.secrets.outputs.HOST }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
-              --set-string config.appBaseLayoutConfigKey=${{ steps.secrets.outputs.REACT_APP_BASE_LAYOUT_CONFIG_KEY }} \
-              --set-string config.appApiUrl=${{ steps.secrets.outputs.REACT_APP_API_URL }} \
-              --set-string config.appWebUrl=${{ steps.secrets.outputs.REACT_APP_WEB_URL }} \
-              --set-string config.appVersion=${{ steps.secrets.outputs.REACT_APP_VERSION }} \
-              --set-string config.appThemeName=${{ steps.secrets.outputs.REACT_APP_THEME_NAME }} \
-              --set-string config.appThemeDemo=${{ steps.secrets.outputs.REACT_APP_THEME_DEMO }} \
-              --set-string config.appBootstrapDocsLink=${{ steps.secrets.outputs.REACT_APP_BOOTSTRAP_DOCS_LINK }} \
-              --set-string config.appSassPath=${{ steps.secrets.outputs.REACT_APP_SASS_PATH }} \
-              --set-string config.appSassVariablePath=${{ steps.secrets.outputs.REACT_APP_SASS_VARIABLES_PATH }} \
-              --set-string config.appPurchaseUrl=${{ steps.secrets.outputs.REACT_APP_PURCHASE_URL }} \
-              --set-string config.appPreviewUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_URL }} \
-              --set-string config.appPreviewReactUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_REACT_URL }}\
-              --set-string config.appPreviewDocsUrl=${{ steps.secrets.outputs.REACT_APP_PREVIEW_DOCS_URL }} \
+              --set-string config.webUrl=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiUrl=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.websiteUrl=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -479,7 +406,7 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=300m \
               --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=1024Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
               --set replicaCount=3
             kubectl rollout status deployment/myriad-cms
