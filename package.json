@@ -1,7 +1,48 @@
 {
-  "name": "demo1",
-  "version": "8.0.28",
+  "name": "myriad-cms",
+  "version": "1.0.0",
+  "description": "myriad-cms",
   "private": true,
+  "license": "AGPL-3.0",
+  "author": "Myriad Dev Team <myriad.dev@blocksphere.id>",
+  "homepage": "https://myriad.social",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myriadsocial/myriad-cms.git"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "rtl": "webpack --config webpack-rtl.config.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "eslintIgnore": [
+    "dist/*"
+  ],
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": "eslint --fix"
+  },
   "dependencies": {
     "@formatjs/intl-pluralrules": "^4.0.28",
     "@formatjs/intl-relativetimeformat": "^9.1.7",
@@ -65,33 +106,6 @@
     "web-vitals": "^1.0.1",
     "yup": "^0.32.9"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "prettier --check .",
-    "format": "prettier --write .",
-    "rtl": "webpack --config webpack-rtl.config.js"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@types/chart.js": "2.9.32",
     "@types/escape-html": "^1.0.1",
@@ -103,11 +117,5 @@
     "@types/react-router-dom": "5.1.7",
     "v": "^0.3.0",
     "webpack-cli": "^4.8.0"
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": "eslint --fix"
-  },
-  "eslintIgnore": [
-    "dist/*"
-  ]
+  }
 }

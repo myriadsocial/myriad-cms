@@ -1,4 +1,4 @@
-name: Pull request automation
+name: Tester
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - main
 
 concurrency:
-  group: test-code-${{ github.event.pull_request.number }}
+  group: tester-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   test-code:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,12 +23,12 @@ jobs:
           node-version: '14'
           cache: 'yarn'
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Test code
         run: yarn test
 
   check-link-markdown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
