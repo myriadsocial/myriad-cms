@@ -77,7 +77,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: create .env file
-        id: build-info
         shell: bash
         run: |
           tee -a .env <<EOF
