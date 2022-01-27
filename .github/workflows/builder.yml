@@ -18,6 +18,7 @@ jobs:
       revision_tag: ${{ steps.build-info.outputs.revision_tag }}
       latest_tag: ${{ steps.build-info.outputs.latest_tag }}
       pre_release: ${{ steps.build-info.outputs.pre_release }}
+      environment: ${{ steps.build-info.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -31,6 +32,7 @@ jobs:
           REVISION_TAG=$SHA_SHORT
           LATEST_TAG=latest-pre-alpha
           PRE_RELEASE=true
+          ENVIRONMENT=development
 
           if [[ $GITHUB_REF =~ refs/tags/ ]] ;
           then
@@ -45,22 +47,48 @@ jobs:
             else
                 SUFFIX=$(tmp=${TAG#$VERSION-} ; echo $tmp | sed -r 's/[0-9]//g' )
                 LATEST_TAG=latest-$SUFFIX
+
+                if [[ $SUFFIX =~ [0-9].[0-9].[0-9]-alpha* ]] ;
+                then
+                    ENVIRONMENT=staging
+                elif [[ $SUFFIX =~ [0-9].[0-9].[0-9]-beta* ]] ;
+                then
+                    ENVIRONMENT=testnet
+                elif [[ $SUFFIX == [0-9].[0-9].[0-9] ]] ;
+                then
+                    ENVIRONMENT=mainnet
+                fi
             fi
           fi
           echo "::set-output name=sha_short::$SHA_SHORT"
           echo "::set-output name=revision_tag::$REVISION_TAG"
           echo "::set-output name=latest_tag::$LATEST_TAG"
           echo "::set-output name=pre_release::$PRE_RELEASE"
+          echo "::set-output name=environment::$ENVIRONMENT"
 
   build:
     runs-on: ubuntu-20.04
     needs:
       - compute-build-info
+    environment: ${{ needs.compute-build-info.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: create .env file
+        id: build-info
+        shell: bash
+        run: |
+          tee -a .env <<EOF
+          HOST=${{ secrets.HOST }}
+          PORT=${{ secrets.PORT }}
+          REACT_APP_MYRIAD_WEB_URL=${{ secrets.REACT_APP_MYRIAD_WEB_URL }}
+          REACT_APP_MYRIAD_API_URL=${{ secrets.REACT_APP_MYRIAD_API_URL }}
+          REACT_APP_MYRIAD_API_KEY=${{ secrets.REACT_APP_MYRIAD_API_KEY }}
+          REACT_APP_MYRIAD_WEBSITE_URL=${{ secrets.REACT_APP_MYRIAD_WEBSITE_URL }}
+          REACT_APP_MYRIAD_SUPPORT_MAIL=${{ secrets.REACT_APP_MYRIAD_SUPPORT_MAIL }}
+          EOF
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -72,19 +100,21 @@ jobs:
           key: ${{ runner.os }}-buildx-main
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - name: Login to DockerHub
+      - name: Login to GCR
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.DEV_GCP_SA_KEY }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
           file: .maintain/docker/Dockerfile
           tags: |
-            ${{ github.repository }}:${{ needs.compute-build-info.outputs.revision_tag }}
-            ${{ github.repository }}:${{ needs.compute-build-info.outputs.latest_tag }}
+            gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }}:${{ needs.compute-build-info.outputs.revision_tag }}
+            gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }}:${{ needs.compute-build-info.outputs.latest_tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       # Temp fix
