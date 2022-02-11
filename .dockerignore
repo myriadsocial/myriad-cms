@@ -104,3 +104,5 @@ DEVELOPING.md
 # Other
 .github
 .maintain
+!.maintain/docker/nginx.conf
+!.maintain/docker/env.sh

@@ -131,7 +131,7 @@ const ReportActionModal: React.FC<Props> = ({
                       }/${referenceId}`
                 }
               >
-                {process.env.REACT_APP_MYRIAD_WEB_URL}/
+                {MYRIAD_WEB_URL}/
                 {referenceType === ReportType.USER ? 'profile' : 'post'}/{referenceId}
               </a>
             </div>
