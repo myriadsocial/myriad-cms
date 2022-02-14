@@ -20,9 +20,10 @@ COPY ./.maintain/docker/env.sh .
 
 RUN apk add --no-cache bash; chmod +x env.sh
 
-COPY ./.maintain/docker/nginx.conf /etc/nginx/nginx.conf
+COPY ./.maintain/docker/nginx/nginx.conf /etc/nginx/nginx.conf
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./.maintain/docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 80
-
 CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]

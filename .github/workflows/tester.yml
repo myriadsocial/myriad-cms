@@ -24,8 +24,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Test code
-        run: yarn test
+      # - name: Test code
+      #   run: yarn test
 
   check-link-markdown:
     runs-on: ubuntu-20.04
