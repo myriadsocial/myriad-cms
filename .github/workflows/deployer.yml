@@ -122,11 +122,11 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
-              --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi \
-              --set replicaCount=1 \
+              --set-string resources.limits.cpu=100m \
+              --set-string resources.limits.memory=128Mi \
+              --set replicaCount=2 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
+              --set autoscaling.minReplicas=2 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/myriad-cms
@@ -215,12 +215,12 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
-              --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi \
-              --set replicaCount=1 \
+              --set-string resources.limits.cpu=100m \
+              --set-string resources.limits.memory=128Mi \
+              --set replicaCount=3 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=1 \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/myriad-cms
       - name: Sleuth webhook
@@ -308,11 +308,11 @@ jobs:
               --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
-              --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi \
-              --set replicaCount=1 \
+              --set-string resources.limits.cpu=100m \
+              --set-string resources.limits.memory=128Mi \
+              --set replicaCount=3 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
+              --set autoscaling.minReplicas=3 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/myriad-cms
