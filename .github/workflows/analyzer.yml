@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '20 12 * * 0'
+    - cron: "20 12 * * 0"
 
 jobs:
   analyze:
@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript', 'typescript']
+        language: ["javascript", "typescript"]
 
     steps:
       - name: Checkout code
