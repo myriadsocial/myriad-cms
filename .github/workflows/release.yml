@@ -14,6 +14,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release_name: ${{ steps.input-check.outputs.release_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,3 +40,95 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ steps.get_release.outputs.id }}
+
+  deploy-release:
+    runs-on: ubuntu-20.04
+    needs:
+      - release
+    env:
+      DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
+    permissions:
+      contents: "read"
+      id-token: "write"
+    steps:
+      - name: Checkout code
+        if: "${{ env.DEPLOY == 'true' }}"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        if: "${{ env.DEPLOY == 'true' }}"
+        id: "auth"
+        uses: "google-github-actions/auth@v0"
+        with:
+          workload_identity_provider: ${{ secrets.MAINNET_GOOGLE_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.MAINNET_SERVICE_ACCOUNT_EMAIL }}
+          project_id: ${{ secrets.MAINNET_GCP_PROJECT_ID }}
+      - name: Set up Cloud SDK
+        if: "${{ env.DEPLOY == 'true' }}"
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Get secrets
+        if: "${{ env.DEPLOY == 'true' }}"
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@main
+        with:
+          secrets: |-
+            SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
+            SSH_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_PORT
+            SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
+            SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
+            WEB_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEB_URL
+            API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_URL
+            API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_KEY
+            ADMIN_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ADMIN_EMAIL
+            ADMIN_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ADMIN_PASSWORD
+            WEBSITE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEBSITE_URL
+            SUPPORT_MAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUPPORT_MAIL
+            DNS_CMS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/DNS_CMS
+      - name: Deploy
+        if: "${{ env.DEPLOY == 'true' }}"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.secrets.outputs.SSH_HOST }}
+          port: ${{ steps.secrets.outputs.SSH_PORT }}
+          username: ${{ steps.secrets.outputs.SSH_USERNAME }}
+          key: ${{ steps.secrets.outputs.SSH_KEY }}
+          script: |
+            helm repo add myriadsocial https://charts.myriad.social
+            helm repo update
+            helm upgrade myriad-cms myriadsocial/myriad-cms \
+              --install \
+              --set-string image.tag=${{ needs.release.outputs.release_name }} \
+              --set-string config.websiteURL=${{ steps.secrets.outputs.WEBSITE_URL }} \
+              --set-string config.supportMail=${{ steps.secrets.outputs.SUPPORT_MAIL }} \
+              --set-string config.webURL=${{ steps.secrets.outputs.WEB_URL }} \
+              --set-string config.apiURL=${{ steps.secrets.outputs.API_URL }} \
+              --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
+              --set-string config.admin.email=${{ steps.secrets.outputs.ADMIN_EMAIL }} \
+              --set-string config.admin.password=${{ steps.secrets.outputs.ADMIN_PASSWORD }} \
+              --set ingress.enabled=true \
+              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/proxy-body-size"="100m" \
+              --set-string ingress.annotations."nginx\.org/client-max-body-size"="100m" \
+              --set-string ingress.hosts[0].host=${{ steps.secrets.outputs.DNS_CMS }} \
+              --set-string ingress.hosts[0].paths[0].path=/ \
+              --set-string ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+              --set-string ingress.tls[0].secretName=myriad-cms-tls \
+              --set-string ingress.tls[0].hosts[0]=${{ steps.secrets.outputs.DNS_CMS }} \
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=128Mi \
+              --set-string resources.limits.cpu=100m \
+              --set-string resources.limits.memory=128Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=11 \
+              --set-string nodeSelector.pool=general
+            kubectl rollout status deployment/myriad-cms
+      - name: Sleuth webhook
+        shell: bash
+        run: |
+          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
+          -d environment=${{ secrets.MAINNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ secrets.CMS_SLEUTH_WEBHOOK }}
